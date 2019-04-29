@@ -1,0 +1,16 @@
+{
+  "description": "this is menu description",
+  "categories": [
+    {
+      "description": "first category description",
+      "products": [
+        {
+          "name": "product1",
+          "price": "10"
+        }
+      ],
+      "categories": []
+    }
+  ],
+  "products": []
+}
