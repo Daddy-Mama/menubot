@@ -1,12 +1,21 @@
 {
-  "description": "this is menu description",
+  "description": "        ШАУРМЭН\n\nМеню: ",
   "categories": [
     {
-      "description": "first category description",
+      "name":"Шаурма",
+      "description": "Шаурма мини: 35 грн\nШаурма стандарт: 50 грн\nШаурма двойная: 100 грн",
       "products": [
         {
-          "name": "product1",
-          "price": "10"
+          "name": "Шаурма мини",
+          "price": "35"
+        },
+        {
+          "name": "Шаурма стандарт",
+          "price": "50"
+        },
+        {
+          "name": "Шаурма двойная",
+          "price": "100"
         }
       ],
       "categories": []

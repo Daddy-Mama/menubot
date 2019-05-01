@@ -17,7 +17,16 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static com.iwahare.enums.CommandsEnum.COMMAND_NOT_RECOGNIZED_ERROR;
 
 @Component
 @PropertySource("classpath:application.properties")
@@ -93,9 +102,6 @@ public class Bot extends TelegramLongPollingBot {
         return requestService.operateMessage(update);
     }
 
-//    private MessageTransportDto operatePhoto(Update update) {
-//        return translatorService.operatePhoto(update);
-//    }
 
     public synchronized void buildAnswer(MessageTransportDto messageTransportDto, Update update)
             throws TelegramApiException {
@@ -107,26 +113,36 @@ public class Bot extends TelegramLongPollingBot {
 
         } else {
             if (update.hasMessage()) {
-                executePhoto(messageTransportDto,update);
+                executePhoto(messageTransportDto, update);
                 executeMessage(messageTransportDto, update);
+            }
+            if (update.hasCallbackQuery()){
+                executePhoto(messageTransportDto,update);
+                executeCallbackQuery(messageTransportDto,update);
             }
 
         }
     }
-
-//    private final void executeSendInvoice(MessageTransportDto messageTransportDto, Update update) throws TelegramApiException {
-//        SendInvoice sendInvoice = messageTransportDto.getSendInvoice();
-//        sendInvoice.setChatId(Math.toIntExact(update.getCallbackQuery().getMessage().getChatId()));
-//        execute(sendInvoice);
-//    }
-
+    private final void executeCallbackQuery(MessageTransportDto messageTransportDto, Update update) throws TelegramApiException {
+        if (messageTransportDto.getDesripion()!=null){
+            EditMessageText editMessageText = new EditMessageText();
+            editMessageText.setText(messageTransportDto.getText());
+            if (messageTransportDto.getInlineKeyboardMarkup() != null) {
+                editMessageText.setReplyMarkup(messageTransportDto.getInlineKeyboardMarkup());
+            }
+            editMessageText.setChatId(getChatId(update));
+            editMessageText.setMessageId(getMessageId(update));
+            execute(editMessageText);
+        }
+    }
     private final void executeMessage(MessageTransportDto messageTransportDto, Update update)
             throws TelegramApiException {
-        if (!messageTransportDto.getDesripion().isEmpty()
-                && messageTransportDto.getInlineKeyboard() != null) {
+        if (messageTransportDto.getDesripion() != null) {
             SendMessage sendMessage = new SendMessage();
             sendMessage.setText(messageTransportDto.getText());
-            sendMessage.setReplyMarkup(messageTransportDto.getInlineKeyboard());
+            if (messageTransportDto.getInlineKeyboardMarkup()!=null){
+                sendMessage.setReplyMarkup(messageTransportDto.getInlineKeyboardMarkup());
+            }
             sendMessage.setChatId(getChatId(update));
             execute(sendMessage);
         }
@@ -135,11 +151,13 @@ public class Bot extends TelegramLongPollingBot {
 
     private final void executePhoto(MessageTransportDto messageTransportDto, Update update)
             throws TelegramApiException {
-        SendPhoto sendPhoto = new SendPhoto();
-        sendPhoto.setPhoto(messageTransportDto.getPhotoId());
-        sendPhoto.setChatId(getChatId(update));
+        if (messageTransportDto.getPhotoId() != null) {
+            SendPhoto sendPhoto = new SendPhoto();
+            sendPhoto.setPhoto(messageTransportDto.getPhotoId());
+            sendPhoto.setChatId(getChatId(update));
 
-        execute(sendPhoto);
+            execute(sendPhoto);
+        }
     }
 
 

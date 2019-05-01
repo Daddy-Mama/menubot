@@ -36,39 +36,6 @@ public class Menu {
         this.photoId = photoId;
     }
 
-//    @Autowired
-//    public Menu() {
-//        for (int i = 1; i < 5; i++) {
-//            this.products.add(new Product("product_" + i, i));
-//        }
-////        this.sendMessage = new SendMessage();
-////build text part
-//        this.header = MENU_TITLE_TEXT.getValue() + "\n\n" + MENU_ADDITIONAL_INFO_TEXT.getValue();
-////        sendMessage.setText(text);
-////build inline keyboard
-//        List<List<InlineKeyboardButton>> buttons =
-//                products.stream()
-//                        .map(x -> new InlineKeyboardButton(x.getName()))
-//                        .map(x -> {
-//                            List<InlineKeyboardButton> keyboardButtonsRow = new ArrayList<>();
-//                            keyboardButtonsRow.add(x);
-//                            return keyboardButtonsRow;
-//                        })
-//                        .collect(Collectors.toList());
-//
-//        this.inlineKeyboardMarkup = new InlineKeyboardMarkup();
-//        inlineKeyboardMarkup.setKeyboard(buttons);
-//
-////        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
-//    }
-
-//    public InlineKeyboardMarkup getInlineKeyboardMarkup() {
-//        return inlineKeyboardMarkup;
-//    }
-//
-//    public String getHeader() {
-//        return header;
-//    }
 
     public Menu() {
     }
@@ -80,6 +47,7 @@ public class Menu {
     public String getDescription() {
         return description;
     }
+
 
     public void setDescription(String description) {
         this.description = description;
@@ -96,4 +64,5 @@ public class Menu {
     public void setCategories(List<Menu> categories) {
         this.categories = categories;
     }
-}
+
+ }
