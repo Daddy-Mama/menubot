@@ -13,10 +13,10 @@ import static com.iwahare.enums.ReservedWordsEnum.MENU_ADDITIONAL_INFO_TEXT;
 import static com.iwahare.enums.ReservedWordsEnum.MENU_TITLE_TEXT;
 
 public class Menu {
-    private  List<Product> products = new ArrayList<>();
+    private List<Product> products = new ArrayList<>();
     private List<Menu> categories = new ArrayList<>();
+    private List<Extra> extras = new ArrayList<>();
     private String photoId;
-//    private InlineKeyboardMarkup inlineKeyboardMarkup;
     private String description;
     private String name;
 
@@ -38,6 +38,20 @@ public class Menu {
 
 
     public Menu() {
+    }
+
+    public Menu(Product product) {
+        this.description = product.getExtraDescription();
+        this.extras = product.getExtras();
+        this.products.add(product);
+    }
+
+    public List<Extra> getExtras() {
+        return extras;
+    }
+
+    public void setExtras(List<Extra> extras) {
+        this.extras = extras;
     }
 
     public void setProducts(List<Product> products) {
@@ -65,4 +79,4 @@ public class Menu {
         this.categories = categories;
     }
 
- }
+}

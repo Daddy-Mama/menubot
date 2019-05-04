@@ -37,6 +37,7 @@ public class Receipt {
                 IntStream.range(0, orders.size())
                         .mapToObj(i -> i+1 + ". " + orders.get(i).toString())
                         .collect(Collectors.joining("\n"))
+                +"\n\n"
                 + TOTAL_TEXT.getValue()
                 + orders.stream().map(x -> x.getPrice()).reduce(0, (sum, x) -> sum + x) + " "
                 + UAH_TEXT.getValue()

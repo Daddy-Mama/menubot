@@ -143,6 +143,9 @@ public class Bot extends TelegramLongPollingBot {
             if (messageTransportDto.getInlineKeyboardMarkup()!=null){
                 sendMessage.setReplyMarkup(messageTransportDto.getInlineKeyboardMarkup());
             }
+            if(messageTransportDto.getKeyboardMarkup()!=null){
+                sendMessage.setReplyMarkup(messageTransportDto.getKeyboardMarkup());
+            }
             sendMessage.setChatId(getChatId(update));
             execute(sendMessage);
         }

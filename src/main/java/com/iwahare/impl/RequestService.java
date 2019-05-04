@@ -1,5 +1,6 @@
 package com.iwahare.impl;
 
+import com.iwahare.dto.Extra;
 import com.iwahare.dto.Menu;
 import com.iwahare.dto.Product;
 import com.iwahare.message.MessageTransportDto;
@@ -7,6 +8,7 @@ import com.iwahare.receipt.Receipt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -29,6 +31,10 @@ public class RequestService implements IRequestService {
     private Menu menu;
     @Autowired
     private IKeyboardService keyboardService;
+    @Autowired
+    private IDataBaseService dataBaseService;
+    @Autowired
+    private IMenuService menuService;
 
     @Override
     public MessageTransportDto operatePayment(Update update) {
@@ -37,56 +43,34 @@ public class RequestService implements IRequestService {
 
     @Override
     public MessageTransportDto operateCallbackQuery(Update update) {
-        List<String> callbackData = Arrays.asList(update.getCallbackQuery().getData().split("/")).stream()
+        List<String> callbackData = Arrays.stream(update.getCallbackQuery().getData().split("/"))
                 .filter(x -> !x.equals("/"))
                 .filter(x -> !x.isEmpty())
                 .collect(Collectors.toList());
         assert callbackData != null && callbackData.size() > 0;
-        Menu category = null;
-        Receipt receipt = null;
-        //GET receipt from callback
-        if (callbackData.stream().filter(x -> x.equals(RECEIPT_TEXT.getValue().substring(1)))
-                .findFirst().isPresent()) {
-            receipt = Receipt.fromJson(callbackData.get(2));
-        }
-        //operate category from callback
-        if (callbackData.stream().filter(x -> x.equals(CATEGORY_TEXT.getValue().substring(1)))
-                .findFirst().isPresent()) {
-            category = menu.getCategories().stream()
-                    .filter(x -> x.getName().equals(callbackData.get(1)))
-                    .findFirst().get();
-        }
-        //operate product from command
-        if (callbackData.stream().filter(x -> x.equals(PRODUCT_TEXT.getValue().substring(1)))
-                .findFirst().isPresent()) {
-            Product product = menu.getCategories().stream()
-                    .map(Menu::getProducts)
-                    .flatMap(List::stream)
-                    .filter(prod -> prod.getName().equals(callbackData.get(1)))
-                    .findFirst().get();
-            category = menu.getCategories().stream()
-                    .filter(x -> x.getProducts().stream().filter(prod -> prod.getName().equals(callbackData.get(1))).findAny().isPresent())
-                    .findFirst().get();
+        User user = update.getCallbackQuery().getFrom();
 
-           receipt= buildReceipt(receipt, product);
-        }
-        //Operate /back command
-        if (callbackData.stream().filter(x -> x.equals(BACK_TEXT.getValue().substring(1)))
-                .findFirst().isPresent()) {
-            category = menu;
-        }
+        switch (callbackData.size()) {
+            // GET /category or /back
+            case 1: {
+                return menuService.operateCategory(callbackData.get(0), user.getId());
+            }
+            case 2: {
+                return menuService.operateProduct(callbackData.get(0), callbackData.get(1), user.getId());
+            }
 
+        }
+        if (callbackData.size() >= 3) {
+            List<String> callbackDataList = new ArrayList<>();
+            for (int i = 2; i < callbackData.size(); i++) {
+                callbackDataList.add(callbackData.get(i));
+            }
+            return menuService.operateExtra(callbackData.get(0), callbackData.get(1), user.getId(), callbackDataList);
 
-        return buildMenu(category, receipt);
+        }
+        return null;
     }
 
-    private Receipt buildReceipt(Receipt receipt, Product product) {
-        if (receipt == null) {
-            receipt = new Receipt();
-        }
-        receipt.addOrder(product);
-        return receipt;
-    }
 
     @Override
     public MessageTransportDto operateMessage(Update update) {
@@ -106,65 +90,20 @@ public class RequestService implements IRequestService {
 
     private MessageTransportDto operateCustomerMessage(Update update) {
         String message = update.getMessage().getText();
-        if (message.equals(START_TEXT.getValue()) || message.equals(MENU_TEXT.getValue())) {
-            return buildMenu(menu, null);
-        } else {
 
-            return buildMenu(null, null);
+        if (message.equals(START_TEXT.getValue())) {
+            MessageTransportDto messageTransportDto = new MessageTransportDto();
+            messageTransportDto.setDesripion("Добро пожаловать!");
+            messageTransportDto.setKeyboardMarkup(keyboardService.getKeyboard());
+            return messageTransportDto;
         }
-    }
-
-    private MessageTransportDto buildMenu(Menu menu, Receipt receipt) {
-        MessageTransportDto messageTransportDto = new MessageTransportDto();
-        //build Inline keyboard
-        List<String> keyboardIcons = new ArrayList<>();
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        if (menu != null) {
-            if (!menu.getCategories().isEmpty()) {
-                keyboardIcons.addAll(menu.getCategories().stream()
-                        .map(Menu::getName)
-                        .filter(x -> x != null)
-                        .map(x -> CATEGORY_TEXT.getValue() + "/" + x)
-                        .collect(Collectors.toList()));
-
-            }
-            if (!menu.getProducts().isEmpty()) {
-                keyboardIcons.addAll(menu.getProducts().stream()
-                        .map(Product::getName)
-                        .filter(x -> x != null)
-                        .map(x -> PRODUCT_TEXT.getValue() + "/" + x)
-                        .collect(Collectors.toList()));
-                keyboardIcons.add(BACK_TEXT.getValue());
-            }
-            List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-
-            for (String keyboardIcon : keyboardIcons) {
-                InlineKeyboardButton button = new InlineKeyboardButton(keyboardIcon);
-                if (receipt != null) {
-                    button.setCallbackData(keyboardIcon + RECEIPT_TEXT.getValue() + "/" + Receipt.toJson(receipt));
-                } else {
-                    button.setCallbackData(keyboardIcon);
-                }
-                List<InlineKeyboardButton> keyboardButtonsRow = new ArrayList<>();
-                keyboardButtonsRow.add(button);
-                buttons.add(keyboardButtonsRow);
-            }
-            inlineKeyboardMarkup.setKeyboard(buttons);
-
-            messageTransportDto.setInlineKeyboardMarkup(inlineKeyboardMarkup);
-            messageTransportDto.setDesripion(menu.getDescription());
-            messageTransportDto.setPhotoId(menu.getPhotoId());
+        if (message.equals(MENU_TEXT.getValue())) {
+            return menuService.buildMainMenu();
         } else {
+            MessageTransportDto messageTransportDto = new MessageTransportDto();
             messageTransportDto.setDesripion(COMMAND_NOT_RECOGNIZED_ERROR.getValue());
-            if (receipt == null) {
-                messageTransportDto.setKeyboardMarkup(keyboardService.getKeyboard(CUSTOMER_MAIN_MENU.getValue()));
-            }
+            return messageTransportDto;
         }
-
-
-        //build Menu keyboard
-        messageTransportDto.setReceipt(receipt);
-
-        return messageTransportDto;
     }
 }
+

@@ -2,10 +2,14 @@ package com.iwahare.enums;
 
 public enum CommandsEnum {
     START_TEXT("/start"),
-    CATEGORY_TEXT("/category"),
-    RECEIPT_TEXT("/receipt"),
-    PRODUCT_TEXT("/product"),
-    BACK_TEXT("/back"),
+    CATEGORY_TEXT("/category/"),
+    RECEIPT_TEXT("/receipt/"),
+    PRODUCT_TEXT("/product/"),
+    EXTRAS_TEXT("/extras/"),
+    OK_TEXT("finalize"),
+    BACK_TEXT("back"),
+    OK_CALLBACK_TEXT("/finalize"),
+    BACK_CALLBACK_TEXT("/back"),
     MAKE_ORDER_TEXT("Сделать заказ"),
 
     PAY_TEXT("Оплатить"),
