@@ -56,10 +56,11 @@ public class DatabaseService implements IDataBaseService {
         return null;
     }
 
-    public void deleteReceipt(Integer key) {
+    public Receipt deleteReceipt(Integer key) {
         if (receiptMap.containsKey(key)) {
-            receiptMap.remove(key);
+          return   receiptMap.remove(key);
         }
+        return null;
     }
 
     @Override

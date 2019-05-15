@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendInvoice;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.payments.LabeledPrice;
 
@@ -30,6 +31,16 @@ public class OrderService implements IOrderService {
 
     @Value(value = "${telegram.payment.token}")
     private String paymentToken;
+
+    @Override
+    public MessageTransportDto operatePayment(Update update) {
+        MessageTransportDto messageTransportDto = new MessageTransportDto();
+        User user = update.getMessage().getFrom();
+
+         messageTransportDto.setDesripion(dataBaseService.deleteReceipt(user.getId()).toChiefForm());
+        return messageTransportDto;
+
+    }
 
     @Override
     public MessageTransportDto operateCallback(List<String> callback, User user) {
@@ -62,7 +73,7 @@ public class OrderService implements IOrderService {
                 .forEach(product -> labeledPrices.add(new LabeledPrice(product.getName(), product.getPrice() * 100)));
         sendInvoice.setPrices(labeledPrices);
         messageTransportDto.setSendInvoice(sendInvoice);
-        dataBaseService.deleteReceipt(user.getId());
+//        dataBaseService.deleteReceipt(user.getId());
 
         return messageTransportDto;
     }

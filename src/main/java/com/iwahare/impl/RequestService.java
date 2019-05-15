@@ -31,11 +31,12 @@ public class RequestService implements IRequestService {
     private IMenuService menuService;
     @Autowired
     private IOrderService orderService;
+    private final List<Long> adminChatIds= Arrays.asList(1L,2L,3L);
 
     @Override
     public MessageTransportDto operatePayment(Update update) {
-        MessageTransportDto messageTransportDto = new MessageTransportDto();
-        messageTransportDto.setDesripion(update.getMessage().getSuccessfulPayment().get());
+        MessageTransportDto messageTransportDto = orderService.operatePayment(update);
+        messageTransportDto.setChat_id(adminChatIds);
         return messageTransportDto;
     }
 

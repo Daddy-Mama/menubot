@@ -2,10 +2,11 @@ package com.iwahare.enums;
 
 public enum ReservedWordsEnum {
     TITLE_TEXT("Ваш заказ: "),
+    CHIEF_TITLE_TEXT("Поступил новый заказ:"),
     TOTAL_TEXT("Всего к оплате: "),
     UAH_TEXT(" грн. "),
     HELLO_TEXT("Добро пожаловать!"),
-
+    DIVIDER_TEXT("==========================="),
     MY_ORDERS_TEXT("My order"),
     MENU_TITLE_TEXT("Menu title"),
 

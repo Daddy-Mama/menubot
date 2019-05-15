@@ -115,6 +115,10 @@ public class Bot extends TelegramLongPollingBot {
 
         } else {
             if (update.hasMessage()) {
+                if (update.getMessage().hasSuccessfulPayment()) {
+                    executeSuccessfullPayment(messageTransportDto, update);
+                    return;
+                }
                 executePhoto(messageTransportDto, update);
                 executeMessage(messageTransportDto, update);
             }
@@ -125,6 +129,17 @@ public class Bot extends TelegramLongPollingBot {
             }
             if (update.hasPreCheckoutQuery()) {
                 executePrecheckout(messageTransportDto);
+            }
+        }
+    }
+
+    private final void executeSuccessfullPayment(MessageTransportDto messageTransportDto, Update update) throws TelegramApiException {
+        if (messageTransportDto.getDesripion() != null) {
+            for (Long chatId:messageTransportDto.getChat_id()){
+                SendMessage sendMessage = new SendMessage();
+                sendMessage.setChatId(chatId);
+                sendMessage.setText(messageTransportDto.getText());
+                execute(sendMessage);
             }
         }
     }

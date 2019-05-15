@@ -6,6 +6,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendInvoice;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
+import java.util.List;
+
 public class MessageTransportDto {
     private String desripion;
     private InlineKeyboardMarkup inlineKeyboardMarkup;
@@ -15,6 +17,7 @@ public class MessageTransportDto {
     private SendInvoice sendInvoice;
     private AnswerPreCheckoutQuery answerPreCheckoutQuery;
     private boolean sucPayment;
+    private List<Long> chat_id;
 
     public MessageTransportDto() {
         this.desripion = "";
@@ -48,6 +51,14 @@ public class MessageTransportDto {
 
     public void setAnswerPreCheckoutQuery(AnswerPreCheckoutQuery answerPreCheckoutQuery) {
         this.answerPreCheckoutQuery = answerPreCheckoutQuery;
+    }
+
+    public List<Long> getChat_id() {
+        return chat_id;
+    }
+
+    public void setChat_id(List<Long> chat_id) {
+        this.chat_id = chat_id;
     }
 
     public void setSendInvoice(SendInvoice sendInvoice) {

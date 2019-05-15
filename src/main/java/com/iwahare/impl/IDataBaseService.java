@@ -6,7 +6,7 @@ import com.iwahare.dto.Receipt;
 public interface IDataBaseService {
     void saveReceipt(Integer key, Receipt receipt);
 
-    void deleteReceipt(Integer key);
+    Receipt deleteReceipt(Integer key);
 
     Receipt getReceiptByUser(Integer key);
 
