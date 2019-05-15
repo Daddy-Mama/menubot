@@ -50,7 +50,9 @@ public class Bot extends TelegramLongPollingBot {
      *
      * @param update Содержит сообщение от пользователя.
      */
-
+    private final MessageTransportDto operateSuccessfullpayment(Update update) {
+        return requestService.operatePayment(update);
+    }
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -61,19 +63,19 @@ public class Bot extends TelegramLongPollingBot {
             messageTransportDto = operateCallbackQuery(update);
         }
 
-        if (update.hasMessage() && update.getMessage().hasText()) {
+        if (update.hasMessage()) {
             if (update.getMessage().hasSuccessfulPayment()) {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            } else {
+                messageTransportDto = operateSuccessfullpayment(update);
+            }
+            if (update.getMessage().hasText()) {
                 messageTransportDto = operateMessage(update);
             }
+
         }
 
-
-//        if (update.hasPreCheckoutQuery()) {
-//            messageTransportDto = operatePreChecoutQuery(update);
-//        }
-
+        if (update.hasPreCheckoutQuery()) {
+            messageTransportDto = operatePreChecoutQuery(update);
+        }
 
         try {
             buildAnswer(messageTransportDto, update);
@@ -88,15 +90,15 @@ public class Bot extends TelegramLongPollingBot {
         return requestService.operateCallbackQuery(update);
     }
 
-//    private MessageTransportDto operatePreChecoutQuery(Update update) {
-//        MessageTransportDto messageTransportDto = new MessageTransportDto();
-//        AnswerPreCheckoutQuery answerPreCheckoutQuery = new AnswerPreCheckoutQuery();
-//        answerPreCheckoutQuery.setOk(true);
-//        answerPreCheckoutQuery.setPreCheckoutQueryId(update.getPreCheckoutQuery().getId());
-//        messageTransportDto.setAnswerPreCheckoutQuery(answerPreCheckoutQuery);
-//
-//        return messageTransportDto;
-//    }
+    private MessageTransportDto operatePreChecoutQuery(Update update) {
+        MessageTransportDto messageTransportDto = new MessageTransportDto();
+        AnswerPreCheckoutQuery answerPreCheckoutQuery = new AnswerPreCheckoutQuery();
+        answerPreCheckoutQuery.setOk(true);
+        answerPreCheckoutQuery.setPreCheckoutQueryId(update.getPreCheckoutQuery().getId());
+        messageTransportDto.setAnswerPreCheckoutQuery(answerPreCheckoutQuery);
+
+        return messageTransportDto;
+    }
 
     private MessageTransportDto operateMessage(Update update) {
         return requestService.operateMessage(update);
@@ -116,15 +118,25 @@ public class Bot extends TelegramLongPollingBot {
                 executePhoto(messageTransportDto, update);
                 executeMessage(messageTransportDto, update);
             }
-            if (update.hasCallbackQuery()){
-                executePhoto(messageTransportDto,update);
-                executeCallbackQuery(messageTransportDto,update);
+            if (update.hasCallbackQuery()) {
+                executePhoto(messageTransportDto, update);
+                executeCallbackQuery(messageTransportDto, update);
+                executeSendInvoice(messageTransportDto, update);
             }
-
+            if (update.hasPreCheckoutQuery()) {
+                executePrecheckout(messageTransportDto);
+            }
         }
     }
+
+    private final void executePrecheckout(MessageTransportDto messageTransportDto) throws TelegramApiException {
+        if (messageTransportDto.getAnswerPreCheckoutQuery() != null) {
+            execute(messageTransportDto.getAnswerPreCheckoutQuery());
+        }
+    }
+
     private final void executeCallbackQuery(MessageTransportDto messageTransportDto, Update update) throws TelegramApiException {
-        if (messageTransportDto.getDesripion()!=null){
+        if (messageTransportDto.getDesripion() != null && messageTransportDto.getSendInvoice() == null) {
             EditMessageText editMessageText = new EditMessageText();
             editMessageText.setText(messageTransportDto.getText());
             if (messageTransportDto.getInlineKeyboardMarkup() != null) {
@@ -135,15 +147,24 @@ public class Bot extends TelegramLongPollingBot {
             execute(editMessageText);
         }
     }
+
+    private final void executeSendInvoice(MessageTransportDto messageTransportDto, Update update) throws TelegramApiException {
+        if (messageTransportDto.getSendInvoice() != null) {
+            SendInvoice sendInvoice = messageTransportDto.getSendInvoice();
+            sendInvoice.setChatId(Math.toIntExact(getChatId(update)));
+            execute(sendInvoice);
+        }
+    }
+
     private final void executeMessage(MessageTransportDto messageTransportDto, Update update)
             throws TelegramApiException {
         if (messageTransportDto.getDesripion() != null) {
             SendMessage sendMessage = new SendMessage();
             sendMessage.setText(messageTransportDto.getText());
-            if (messageTransportDto.getInlineKeyboardMarkup()!=null){
+            if (messageTransportDto.getInlineKeyboardMarkup() != null) {
                 sendMessage.setReplyMarkup(messageTransportDto.getInlineKeyboardMarkup());
             }
-            if(messageTransportDto.getKeyboardMarkup()!=null){
+            if (messageTransportDto.getKeyboardMarkup() != null) {
                 sendMessage.setReplyMarkup(messageTransportDto.getKeyboardMarkup());
             }
             sendMessage.setChatId(getChatId(update));

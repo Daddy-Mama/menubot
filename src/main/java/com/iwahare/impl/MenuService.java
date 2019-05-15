@@ -2,20 +2,18 @@ package com.iwahare.impl;
 
 import com.iwahare.dto.Extra;
 import com.iwahare.dto.Menu;
-import com.iwahare.dto.MenuBuilder;
 import com.iwahare.dto.Product;
 import com.iwahare.message.MessageTransportDto;
-import com.iwahare.receipt.Receipt;
+import com.iwahare.dto.Receipt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import sun.applet.Main;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.iwahare.enums.CommandsEnum.*;
@@ -29,13 +27,37 @@ public class MenuService implements IMenuService {
     private Menu menu;
     @Autowired
     private IDataBaseService dataBaseService;
+    @Autowired
+    private IKeyboardService keyboardService;
 
     public MenuService() {
     }
 
+    public MessageTransportDto operateCallback(List<String> callbackData, User user) {
+        switch (callbackData.size()) {
+            // GET /category or /back
+            case 1: {
+                return operateCategory(callbackData.get(0), user.getId());
+            }
+            case 2: {
+                if (callbackData.contains(BACK_TEXT.getValue())) {
+                    return operateBackCommand(callbackData.get(1), user.getId());
+                }
+                return operateProduct(callbackData.get(0), callbackData.get(1), user.getId());
+            }
+            case 3: {
+                return operateExtra(callbackData.get(0), callbackData.get(1), user.getId(), callbackData.get(2));
+            }
+        }
+        return null;
+    }
+
     public MessageTransportDto operateCategory(String categoryName, Integer userId) {
-        if (categoryName.equals(BACK_TEXT.getValue())) {
-            return operateBackToMainMenuCommand();
+//        if (categoryName.equals(BACK_TEXT.getValue())) {
+//            return operateBackToMainMenuCommand();
+//        }
+        if (categoryName.equals(MENU_TEXT.getValue())) {
+            return buildMainMenu(userId);
         }
         Receipt receipt = dataBaseService.getReceiptByUser(userId);
         Menu category = menu.getCategories().stream()
@@ -46,9 +68,9 @@ public class MenuService implements IMenuService {
         return messageTransportDto;
     }
 
-    private MessageTransportDto operateBackToMainMenuCommand() {
-        return buildMainMenu();
-    }
+//    private MessageTransportDto operateBackToMainMenuCommand() {
+//        return buildMainMenu();
+//    }
 
     @Override
     public MessageTransportDto operateProduct(String categoryName, String productName, Integer userId) {
@@ -80,8 +102,8 @@ public class MenuService implements IMenuService {
     }
 
     @Override
-    public MessageTransportDto operateExtra(String categoryName, String productName, Integer userId, List<String> extraName) {
-        Product product = new Product(menu.getCategories().stream()
+    public MessageTransportDto operateExtra(String categoryName, String productName, Integer userId, String extraName) {
+        Product productSchema = new Product(menu.getCategories().stream()
                 .filter(x -> x.getName().equals(categoryName))
                 .map(Menu::getProducts)
                 .flatMap(List::stream)
@@ -90,14 +112,20 @@ public class MenuService implements IMenuService {
         Menu category = menu.getCategories().stream()
                 .filter(x -> x.getName().equals(categoryName))
                 .findFirst().get();
-        MessageTransportDto messageTransportDto = buildProductMenu(category, product);
+        MessageTransportDto messageTransportDto = buildProductMenu(category, productSchema);
 
+        Product product = dataBaseService.getLastProductInReceipt(userId);
+        Extra extra = category.getProducts().stream()
+                .filter(product1 -> productSchema.getName().equals(productName))
+                .map(product1 -> productSchema.getExtras())
+                .filter(extras -> extras != null)
+                .flatMap(extras -> extras.stream())
+                .filter(extra1 -> extra1.getName().equals(extraName))
+                .findFirst().orElse(null);
 
-        List<Extra> extras = product.getExtras().stream()
-                .filter(x -> extraName.contains(x.getName()))
-                .collect(Collectors.toList());
-
-        product.setExtras(extras);
+        if (extra != null) {
+            product.addExtra(extra);
+        }
         Receipt receipt = dataBaseService.replaceLastProduct(userId, product);
 
         messageTransportDto.setReceipt(receipt);
@@ -105,10 +133,17 @@ public class MenuService implements IMenuService {
         return messageTransportDto;
     }
 
-    public MessageTransportDto buildMainMenu() {
+    public MessageTransportDto operateBackCommand(String categoryName, Integer userId) {
+        dataBaseService.deleteLastProduct(userId);
+        return operateCategory(categoryName, userId);
+
+    }
+
+    public MessageTransportDto buildMainMenu(Integer userId) {
         MessageTransportDto messageTransportDto = new MessageTransportDto();
         List<String> buttonNames = new ArrayList<>();
         List<String> buttonCallback = new ArrayList<>();
+        Receipt receipt = dataBaseService.getReceiptByUser(userId);
         if (!menu.getCategories().isEmpty()) {
             buttonNames.addAll(menu.getCategories().stream()
                     .map(Menu::getName)
@@ -129,7 +164,8 @@ public class MenuService implements IMenuService {
 //                    .collect(Collectors.toList()));
 //            buttonNames.add(BACK_TEXT.getValue());
 //        }
-        messageTransportDto.setInlineKeyboardMarkup(buildKeyboard(buttonNames, buttonCallback));
+        messageTransportDto.setReceipt(receipt);
+        messageTransportDto.setInlineKeyboardMarkup(keyboardService.buildInlineKeyboard(buttonNames, buttonCallback));
         messageTransportDto.setDesripion(menu.getDescription());
         messageTransportDto.setPhotoId(menu.getPhotoId());
         return messageTransportDto;
@@ -149,10 +185,10 @@ public class MenuService implements IMenuService {
                     .map(x -> category.getName() + "/" + x)
                     .collect(Collectors.toList()));
             buttonNames.add(BACK_TEXT.getValue());
-            buttonCallback.add(BACK_CALLBACK_TEXT.getValue());
+            buttonCallback.add(MENU_TEXT.getValue());
         }
-        messageTransportDto.setInlineKeyboardMarkup(buildKeyboard(buttonNames, buttonCallback));
-        messageTransportDto.setDesripion(menu.getDescription());
+        messageTransportDto.setInlineKeyboardMarkup(keyboardService.buildInlineKeyboard(buttonNames, buttonCallback));
+        messageTransportDto.setDesripion(category.getDescription());
         messageTransportDto.setPhotoId(menu.getPhotoId());
         return messageTransportDto;
     }
@@ -169,12 +205,14 @@ public class MenuService implements IMenuService {
         buttonCallback.addAll(buttonNames.stream()
                 .map(x -> category.getName() + "/" + product.getName() + "/" + x)
                 .collect(Collectors.toList()));
+        buttonNames.add(OK_TEXT.getValue());
         buttonNames.add(BACK_TEXT.getValue());
 
-        buttonCallback.add(BACK_CALLBACK_TEXT.getValue());
+        buttonCallback.add("/" + category.getName());
+        buttonCallback.add("/" + BACK_TEXT.getValue() + "/" + category.getName());
 
-        messageTransportDto.setInlineKeyboardMarkup(buildKeyboard(buttonNames, buttonCallback));
-        messageTransportDto.setDesripion(menu.getDescription());
+        messageTransportDto.setInlineKeyboardMarkup(keyboardService.buildInlineKeyboard(buttonNames, buttonCallback));
+        messageTransportDto.setDesripion(product.getExtraDescription());
         messageTransportDto.setPhotoId(menu.getPhotoId());
         return messageTransportDto;
     }
@@ -259,19 +297,34 @@ public class MenuService implements IMenuService {
 //        return messageTransportDto;
 //    }
 
-    private InlineKeyboardMarkup buildKeyboard(List<String> keyboardIcons, List<String> keyboardCallback) {
-        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        assert keyboardCallback.size() == keyboardIcons.size();
-        for (int i = 0; i < keyboardCallback.size(); i++) {
-
-            InlineKeyboardButton button = new InlineKeyboardButton(keyboardIcons.get(i));
-            button.setCallbackData(keyboardCallback.get(i));
-            List<InlineKeyboardButton> keyboardButtonsRow = new ArrayList<>();
-            keyboardButtonsRow.add(button);
-            buttons.add(keyboardButtonsRow);
-        }
-        inlineKeyboardMarkup.setKeyboard(buttons);
-        return inlineKeyboardMarkup;
-    }
+//    private InlineKeyboardMarkup buildKeyboard(List<String> keyboardIcons, List<String> keyboardCallback) {
+//        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
+//        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+//        assert keyboardCallback.size() == keyboardIcons.size();
+//        Iterator<String> iteratorIcon = keyboardIcons.iterator();
+//        Iterator<String> iteratorCallback = keyboardCallback.iterator();
+//        while (iteratorIcon.hasNext()) {
+//            String buttonName = iteratorIcon.next();
+//            InlineKeyboardButton button = new InlineKeyboardButton(buttonName);
+//            List<InlineKeyboardButton> keyboardButtonsRow = new ArrayList<>();
+//
+//            button.setCallbackData(iteratorCallback.next());
+//            keyboardButtonsRow.add(button);
+//
+//            if (buttonName.equals(OK_TEXT.getValue())) {
+//                buttonName = iteratorIcon.next();
+//                InlineKeyboardButton backButton = new InlineKeyboardButton(buttonName);
+//                backButton.setCallbackData(iteratorCallback.next());
+//                keyboardButtonsRow.add(backButton);
+//                buttons.add(keyboardButtonsRow);
+//                break;
+//            }
+//
+//            buttons.add(keyboardButtonsRow);
+//
+//
+//        }
+//        inlineKeyboardMarkup.setKeyboard(buttons);
+//        return inlineKeyboardMarkup;
+//    }
 }

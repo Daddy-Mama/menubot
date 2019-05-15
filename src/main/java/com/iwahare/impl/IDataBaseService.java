@@ -1,8 +1,7 @@
 package com.iwahare.impl;
 
-import com.iwahare.dto.Extra;
 import com.iwahare.dto.Product;
-import com.iwahare.receipt.Receipt;
+import com.iwahare.dto.Receipt;
 
 public interface IDataBaseService {
     void saveReceipt(Integer key, Receipt receipt);
@@ -13,7 +12,9 @@ public interface IDataBaseService {
 
     Receipt buildReceipt(Integer key, Product product);
 
-//    Receipt buildReceipt(Integer key, Product product, Extra extra);
+    Product getLastProductInReceipt(Integer key);
 
     Receipt replaceLastProduct(Integer key, Product product);
+
+    void deleteLastProduct(Integer key);
 }

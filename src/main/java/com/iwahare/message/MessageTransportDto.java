@@ -1,19 +1,10 @@
 package com.iwahare.message;
 
-import com.iwahare.receipt.Receipt;
+import com.iwahare.dto.Receipt;
 import org.telegram.telegrambots.meta.api.methods.AnswerPreCheckoutQuery;
 import org.telegram.telegrambots.meta.api.methods.send.SendInvoice;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class MessageTransportDto {
     private String desripion;
@@ -21,19 +12,47 @@ public class MessageTransportDto {
     private String photoId;
     private Receipt receipt;
     private ReplyKeyboardMarkup keyboardMarkup;
+    private SendInvoice sendInvoice;
+    private AnswerPreCheckoutQuery answerPreCheckoutQuery;
+    private boolean sucPayment;
 
     public MessageTransportDto() {
+        this.desripion = "";
     }
 
 
     public String getText() {
         String text = desripion;
+
         if (receipt != null) {
             text = receipt.toString() + text;
         }
         return text;
     }
 
+    public SendInvoice getSendInvoice() {
+        return sendInvoice;
+    }
+
+    public boolean isSucPayment() {
+        return sucPayment;
+    }
+
+    public void setSucPayment(boolean sucPayment) {
+        this.sucPayment = sucPayment;
+    }
+
+    public AnswerPreCheckoutQuery getAnswerPreCheckoutQuery() {
+        return answerPreCheckoutQuery;
+    }
+
+    public void setAnswerPreCheckoutQuery(AnswerPreCheckoutQuery answerPreCheckoutQuery) {
+        this.answerPreCheckoutQuery = answerPreCheckoutQuery;
+    }
+
+    public void setSendInvoice(SendInvoice sendInvoice) {
+        this.sendInvoice = sendInvoice;
+    }
 
     public String getDesripion() {
         return desripion;

@@ -4,6 +4,7 @@ package com.iwahare.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.iwahare.enums.ReservedWordsEnum;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,14 @@ public class Product {
         return extras;
     }
 
+    public void addExtra(Extra extra){
+        if (this.extras==null){
+            extras=new ArrayList<>();
+        }
+        if(!extras.contains(extra)){
+            extras.add(extra);
+        }
+    }
     public void setExtras(List<Extra> extras) {
         this.extras = extras;
     }

@@ -1,17 +1,11 @@
 package com.iwahare.impl;
 
-import com.iwahare.dto.Extra;
 import com.iwahare.dto.Menu;
-import com.iwahare.dto.Product;
 import com.iwahare.message.MessageTransportDto;
-import com.iwahare.receipt.Receipt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.iwahare.enums.CommandsEnum.*;
-import static com.iwahare.enums.ReservedWordsEnum.CUSTOMER_MAIN_MENU;
+import static com.iwahare.enums.ReservedWordsEnum.MY_ORDERS_TEXT;
 
 
 @Service
@@ -35,10 +29,14 @@ public class RequestService implements IRequestService {
     private IDataBaseService dataBaseService;
     @Autowired
     private IMenuService menuService;
+    @Autowired
+    private IOrderService orderService;
 
     @Override
     public MessageTransportDto operatePayment(Update update) {
-        return null;
+        MessageTransportDto messageTransportDto = new MessageTransportDto();
+        messageTransportDto.setDesripion(update.getMessage().getSuccessfulPayment().get());
+        return messageTransportDto;
     }
 
     @Override
@@ -49,28 +47,12 @@ public class RequestService implements IRequestService {
                 .collect(Collectors.toList());
         assert callbackData != null && callbackData.size() > 0;
         User user = update.getCallbackQuery().getFrom();
-
-        switch (callbackData.size()) {
-            // GET /category or /back
-            case 1: {
-                return menuService.operateCategory(callbackData.get(0), user.getId());
-            }
-            case 2: {
-                return menuService.operateProduct(callbackData.get(0), callbackData.get(1), user.getId());
-            }
-
+        if (callbackData.contains(ORDER_CALLBACK.getValue())) {
+            return orderService.operateCallback(callbackData, user);
+        } else {
+            return menuService.operateCallback(callbackData, user);
         }
-        if (callbackData.size() >= 3) {
-            List<String> callbackDataList = new ArrayList<>();
-            for (int i = 2; i < callbackData.size(); i++) {
-                callbackDataList.add(callbackData.get(i));
-            }
-            return menuService.operateExtra(callbackData.get(0), callbackData.get(1), user.getId(), callbackDataList);
-
-        }
-        return null;
     }
-
 
     @Override
     public MessageTransportDto operateMessage(Update update) {
@@ -97,8 +79,13 @@ public class RequestService implements IRequestService {
             messageTransportDto.setKeyboardMarkup(keyboardService.getKeyboard());
             return messageTransportDto;
         }
-        if (message.equals(MENU_TEXT.getValue())) {
-            return menuService.buildMainMenu();
+        if (message.equals(MY_ORDERS_TEXT.getValue())) {
+            User user = update.getMessage().getFrom();
+            return orderService.buildOrderMenu(user.getId());
+        }
+        if (message.toLowerCase().equals(MENU_TEXT.getValue().toLowerCase())) {
+            User user = update.getMessage().getFrom();
+            return menuService.buildMainMenu(user.getId());
         } else {
             MessageTransportDto messageTransportDto = new MessageTransportDto();
             messageTransportDto.setDesripion(COMMAND_NOT_RECOGNIZED_ERROR.getValue());

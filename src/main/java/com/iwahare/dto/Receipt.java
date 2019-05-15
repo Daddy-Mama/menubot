@@ -1,11 +1,10 @@
-package com.iwahare.receipt;
+package com.iwahare.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iwahare.dto.Product;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,16 +30,40 @@ public class Receipt {
         this.orders.add(product);
     }
 
+    public String toPayment(){
+      return   IntStream.range(0, orders.size())
+                .mapToObj(i -> i + 1 + ". " + orders.get(i).toString())
+                .collect(Collectors.joining("\n"));
+    }
     public synchronized String toString() {
-        return title +
-                "\n\n " +
-                IntStream.range(0, orders.size())
-                        .mapToObj(i -> i+1 + ". " + orders.get(i).toString())
-                        .collect(Collectors.joining("\n"))
-                +"\n\n"
+        Integer summary = orders.stream()
+                .map(x -> x.getPrice())
+                .reduce(0, (sum, x) -> sum + x);
+
+        Integer extrasSum = orders.stream()
+                .map(Product::getExtras)
+                .filter(extras -> extras != null)
+                .flatMap(extras -> extras.stream())
+                .map(extra -> extra.getPrice())
+                .reduce(0, (s, price) -> s + price);
+        if (extrasSum == null) {
+            extrasSum = 0;
+        }
+
+        summary = summary + extrasSum;
+        return "==========================="
+                + "\n"
+                + title
+                + "\n\n "
+                + IntStream.range(0, orders.size())
+                .mapToObj(i -> i + 1 + ". " + orders.get(i).toString())
+                .collect(Collectors.joining("\n"))
+                + "\n\n"
                 + TOTAL_TEXT.getValue()
-                + orders.stream().map(x -> x.getPrice()).reduce(0, (sum, x) -> sum + x) + " "
+                + summary
                 + UAH_TEXT.getValue()
+
+                + "==========================="
                 + "\n\n";
 
     }

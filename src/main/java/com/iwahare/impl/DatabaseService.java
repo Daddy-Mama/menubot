@@ -1,12 +1,12 @@
 package com.iwahare.impl;
 
-import com.iwahare.dto.Extra;
 import com.iwahare.dto.Product;
-import com.iwahare.receipt.Receipt;
+import com.iwahare.dto.Receipt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -35,9 +35,8 @@ public class DatabaseService implements IDataBaseService {
             receipt.getOrders().remove(receipt.getOrders().size() - 1);
             receipt.addOrder(product);
             receiptMap.replace(key, receipt);
-        }
-        else {
-            receipt = buildReceipt(key,product);
+        } else {
+            receipt = buildReceipt(key, product);
         }
         return receipt;
     }
@@ -60,6 +59,25 @@ public class DatabaseService implements IDataBaseService {
     public void deleteReceipt(Integer key) {
         if (receiptMap.containsKey(key)) {
             receiptMap.remove(key);
+        }
+    }
+
+    @Override
+    public Product getLastProductInReceipt(Integer key) {
+        if (receiptMap.containsKey(key)) {
+            List<Product> orderList = receiptMap.get(key).getOrders();
+            return orderList.get(orderList.size() - 1);
+        }
+        return null;
+    }
+
+    public void deleteLastProduct(Integer key) {
+        if (receiptMap.containsKey(key)) {
+            List<Product> orderList = receiptMap.get(key).getOrders();
+            orderList.remove(orderList.size() - 1);
+            if(orderList.isEmpty()){
+                deleteReceipt(key);
+            }
         }
     }
 }

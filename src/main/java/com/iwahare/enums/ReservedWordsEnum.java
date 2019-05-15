@@ -6,13 +6,16 @@ public enum ReservedWordsEnum {
     UAH_TEXT(" грн. "),
     HELLO_TEXT("Добро пожаловать!"),
 
-
+    MY_ORDERS_TEXT("My order"),
     MENU_TITLE_TEXT("Menu title"),
+
     MENU_ADDITIONAL_INFO_TEXT("Menu additional info"),
 
     CUSTOMER_MAIN_MENU("Customer main menu"),
     CUSTOMER_PAYMENT_MENU("Customer payment menu"),
+    RECEIPT_TITLE("Оплата заказа"),
 
+    EMPTY_RECEIPT_ERROR_TEXT("You have not made order yet!"),
     CUSTOMER_RECEIPT_BUTTON("My order"),
     CUSTOMER_MENU_BUTTON("Menu"),
     CUSTOMER_PAY_BUTTON("Pay"),
