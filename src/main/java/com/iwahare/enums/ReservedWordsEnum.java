@@ -5,6 +5,7 @@ public enum ReservedWordsEnum {
     CHIEF_TITLE_TEXT("Поступил новый заказ:"),
     TOTAL_TEXT("Всего к оплате: "),
     UAH_TEXT(" грн. "),
+    PAYMENT_CURRENCY("UAH"),
     HELLO_TEXT("Добро пожаловать!"),
     DIVIDER_TEXT("==========================="),
     MY_ORDERS_TEXT("My order"),
@@ -20,7 +21,9 @@ public enum ReservedWordsEnum {
     CUSTOMER_RECEIPT_BUTTON("My order"),
     CUSTOMER_MENU_BUTTON("Menu"),
     CUSTOMER_PAY_BUTTON("Pay"),
-    CUSTOMER_CANCEL_BUTTON("Cancel");
+    CUSTOMER_CANCEL_BUTTON("Cancel"),
+
+    ORDER_MENU_BUTTON("Operate order");
     private String value;
 
     private ReservedWordsEnum(String value) {

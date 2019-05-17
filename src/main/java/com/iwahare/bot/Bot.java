@@ -57,7 +57,6 @@ public class Bot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         logger.info("===============================================================================================");
-
         MessageTransportDto messageTransportDto = new MessageTransportDto();
         if (update.hasCallbackQuery()) {
             messageTransportDto = operateCallbackQuery(update);
@@ -105,7 +104,7 @@ public class Bot extends TelegramLongPollingBot {
     }
 
 
-    public synchronized void buildAnswer(MessageTransportDto messageTransportDto, Update update)
+    public void buildAnswer(MessageTransportDto messageTransportDto, Update update)
             throws TelegramApiException {
 
         if (messageTransportDto == null) {
@@ -135,7 +134,7 @@ public class Bot extends TelegramLongPollingBot {
 
     private final void executeSuccessfullPayment(MessageTransportDto messageTransportDto, Update update) throws TelegramApiException {
         if (messageTransportDto.getDesripion() != null) {
-            for (Long chatId:messageTransportDto.getChat_id()){
+            for (Long chatId : messageTransportDto.getChat_id()) {
                 SendMessage sendMessage = new SendMessage();
                 sendMessage.setChatId(chatId);
                 sendMessage.setText(messageTransportDto.getText());

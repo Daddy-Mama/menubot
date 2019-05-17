@@ -31,7 +31,7 @@ public class RequestService implements IRequestService {
     private IMenuService menuService;
     @Autowired
     private IOrderService orderService;
-    private final List<Long> adminChatIds= Arrays.asList(1L,2L,3L);
+    private final List<Long> adminChatIds = Arrays.asList(388466771L);
 
     @Override
     public MessageTransportDto operatePayment(Update update) {
@@ -48,7 +48,7 @@ public class RequestService implements IRequestService {
                 .collect(Collectors.toList());
         assert callbackData != null && callbackData.size() > 0;
         User user = update.getCallbackQuery().getFrom();
-        if (callbackData.contains(ORDER_CALLBACK.getValue())) {
+        if (callbackData.contains(ORDER_MENU_CALLBACK.getValue())) {
             return orderService.operateCallback(callbackData, user);
         } else {
             return menuService.operateCallback(callbackData, user);
@@ -57,41 +57,45 @@ public class RequestService implements IRequestService {
 
     @Override
     public MessageTransportDto operateMessage(Update update) {
-        if (adminChatList.contains(update.getMessage().getChatId())) {
-            return operateAdminMessage(update);
+        String message = update.getMessage().getText();
+
+        if (message.equals(START_TEXT.getValue())) {
+            MessageTransportDto messageTransportDto = menuService.buildMainMenu(update.getMessage().getFrom().getId());
+//            messageTransportDto.setDesripion("Добро пожаловать!");
+            return messageTransportDto;
         } else {
-            return operateCustomerMessage(update);
-
-
+            MessageTransportDto messageTransportDto = new MessageTransportDto();
+            messageTransportDto.setDesripion(COMMAND_NOT_RECOGNIZED_ERROR.getValue());
+            return messageTransportDto;
         }
-//        return null;
+
     }
 
     private MessageTransportDto operateAdminMessage(Update update) {
         return null;
     }
 
-    private MessageTransportDto operateCustomerMessage(Update update) {
-        String message = update.getMessage().getText();
-
-        if (message.equals(START_TEXT.getValue())) {
-            MessageTransportDto messageTransportDto = new MessageTransportDto();
-            messageTransportDto.setDesripion("Добро пожаловать!");
-            messageTransportDto.setKeyboardMarkup(keyboardService.getKeyboard());
-            return messageTransportDto;
-        }
-        if (message.equals(MY_ORDERS_TEXT.getValue())) {
-            User user = update.getMessage().getFrom();
-            return orderService.buildOrderMenu(user.getId());
-        }
-        if (message.toLowerCase().equals(MENU_TEXT.getValue().toLowerCase())) {
-            User user = update.getMessage().getFrom();
-            return menuService.buildMainMenu(user.getId());
-        } else {
-            MessageTransportDto messageTransportDto = new MessageTransportDto();
-            messageTransportDto.setDesripion(COMMAND_NOT_RECOGNIZED_ERROR.getValue());
-            return messageTransportDto;
-        }
-    }
+//    private MessageTransportDto operateCustomerMessage(Update update) {
+//        String message = update.getMessage().getText();
+//
+//        if (message.equals(START_TEXT.getValue())) {
+//            MessageTransportDto messageTransportDto = new MessageTransportDto();
+//            messageTransportDto.setDesripion("Добро пожаловать!");
+//            messageTransportDto.setKeyboardMarkup(keyboardService.getKeyboard());
+//            return messageTransportDto;
+//        }
+//        if (message.equals(MY_ORDERS_TEXT.getValue())) {
+//            User user = update.getMessage().getFrom();
+//            return orderService.buildOrderMenu(user.getId());
+//        }
+//        if (message.toLowerCase().equals(MENU_TEXT.getValue().toLowerCase())) {
+//            User user = update.getMessage().getFrom();
+//            return menuService.buildMainMenu(user.getId());
+//        } else {
+//            MessageTransportDto messageTransportDto = new MessageTransportDto();
+//            messageTransportDto.setDesripion(COMMAND_NOT_RECOGNIZED_ERROR.getValue());
+//            return messageTransportDto;
+//        }
+//    }
 }
 

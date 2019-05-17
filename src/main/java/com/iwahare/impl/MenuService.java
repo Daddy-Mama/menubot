@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.iwahare.enums.CommandsEnum.*;
+import static com.iwahare.enums.ReservedWordsEnum.ORDER_MENU_BUTTON;
 
 /**
  * Created by Артем on 03.05.2019.
@@ -29,6 +30,8 @@ public class MenuService implements IMenuService {
     private IDataBaseService dataBaseService;
     @Autowired
     private IKeyboardService keyboardService;
+    @Autowired
+    private IReceiptService receiptService;
 
     public MenuService() {
     }
@@ -53,9 +56,7 @@ public class MenuService implements IMenuService {
     }
 
     public MessageTransportDto operateCategory(String categoryName, Integer userId) {
-//        if (categoryName.equals(BACK_TEXT.getValue())) {
-//            return operateBackToMainMenuCommand();
-//        }
+
         if (categoryName.equals(MENU_TEXT.getValue())) {
             return buildMainMenu(userId);
         }
@@ -64,13 +65,10 @@ public class MenuService implements IMenuService {
                 .filter(x -> x.getName().equals(categoryName))
                 .findFirst().get();
         MessageTransportDto messageTransportDto = buildCategory(category);
-        messageTransportDto.setReceipt(receipt);
+        messageTransportDto.setReceiptText(receiptService.toCustomerForm(receipt));
         return messageTransportDto;
     }
 
-//    private MessageTransportDto operateBackToMainMenuCommand() {
-//        return buildMainMenu();
-//    }
 
     @Override
     public MessageTransportDto operateProduct(String categoryName, String productName, Integer userId) {
@@ -96,7 +94,7 @@ public class MenuService implements IMenuService {
 
         product.setExtras(null);
         Receipt receipt = dataBaseService.buildReceipt(userId, product);
-        messageTransportDto.setReceipt(receipt);
+        messageTransportDto.setReceiptText(receiptService.toCustomerForm(receipt));
 
         return messageTransportDto;
     }
@@ -128,7 +126,7 @@ public class MenuService implements IMenuService {
         }
         Receipt receipt = dataBaseService.replaceLastProduct(userId, product);
 
-        messageTransportDto.setReceipt(receipt);
+        messageTransportDto.setReceiptText(receiptService.toCustomerForm(receipt));
 
         return messageTransportDto;
     }
@@ -153,22 +151,19 @@ public class MenuService implements IMenuService {
                     .map(x -> "/" + x)
                     .collect(Collectors.toList()));
         }
-//        //operate product
-//        if (!menu.getProducts().isEmpty()) {
-//            buttonNames.addAll(menu.getProducts().stream()
-//                    .map(Product::getName)
-//                    .filter(x -> x != null)
-//                    .collect(Collectors.toList()));
-//            buttonCallback.addAll(buttonNames.stream()
-//                    .map(x -> "/" + x)
-//                    .collect(Collectors.toList()));
-//            buttonNames.add(BACK_TEXT.getValue());
-//        }
-        messageTransportDto.setReceipt(receipt);
+        messageTransportDto.setReceiptText(receiptService.toCustomerForm(receipt));
+        if (receipt != null) {
+            addOrderMenuButton(buttonNames, buttonCallback);
+        }
         messageTransportDto.setInlineKeyboardMarkup(keyboardService.buildInlineKeyboard(buttonNames, buttonCallback));
         messageTransportDto.setDesripion(menu.getDescription());
         messageTransportDto.setPhotoId(menu.getPhotoId());
         return messageTransportDto;
+    }
+
+    private void addOrderMenuButton(List<String> buttonNames, List<String> buttonCallback) {
+        buttonNames.add(ORDER_MENU_BUTTON.getValue());
+        buttonCallback.add(ORDER_MENU_CALLBACK.getValue());
     }
 
     public MessageTransportDto buildCategory(Menu category) {

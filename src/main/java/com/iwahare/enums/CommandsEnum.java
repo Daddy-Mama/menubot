@@ -9,7 +9,7 @@ public enum CommandsEnum {
     OK_TEXT("Ok"),
     BACK_TEXT("back"),
 
-    ORDER_CALLBACK("order"),
+    ORDER_MENU_CALLBACK("order"),
     CUSTOMER_PAY_BUTTON_CALLBACK("pay"),
     CUSTOMER_CLEAR_BUTTON_CALLBACK("clear"),
 

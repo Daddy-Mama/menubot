@@ -3,6 +3,7 @@ package com.iwahare.message;
 import com.iwahare.dto.Receipt;
 import org.telegram.telegrambots.meta.api.methods.AnswerPreCheckoutQuery;
 import org.telegram.telegrambots.meta.api.methods.send.SendInvoice;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
@@ -12,12 +13,13 @@ public class MessageTransportDto {
     private String desripion;
     private InlineKeyboardMarkup inlineKeyboardMarkup;
     private String photoId;
-    private Receipt receipt;
+    private String receiptText;
     private ReplyKeyboardMarkup keyboardMarkup;
     private SendInvoice sendInvoice;
     private AnswerPreCheckoutQuery answerPreCheckoutQuery;
     private boolean sucPayment;
     private List<Long> chat_id;
+    private DeleteMessage deleteMessage;
 
     public MessageTransportDto() {
         this.desripion = "";
@@ -27,10 +29,18 @@ public class MessageTransportDto {
     public String getText() {
         String text = desripion;
 
-        if (receipt != null) {
-            text = receipt.toString() + text;
+        if (receiptText != null) {
+            text = receiptText + text;
         }
         return text;
+    }
+
+    public DeleteMessage getDeleteMessage() {
+        return deleteMessage;
+    }
+
+    public void setDeleteMessage(DeleteMessage deleteMessage) {
+        this.deleteMessage = deleteMessage;
     }
 
     public SendInvoice getSendInvoice() {
@@ -89,12 +99,12 @@ public class MessageTransportDto {
         this.photoId = photoId;
     }
 
-    public Receipt getReceipt() {
-        return receipt;
+    public String getReceiptText() {
+        return receiptText;
     }
 
-    public void setReceipt(Receipt receipt) {
-        this.receipt = receipt;
+    public void setReceiptText(String receiptText) {
+        this.receiptText = receiptText;
     }
 
     public ReplyKeyboardMarkup getKeyboardMarkup() {

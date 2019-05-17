@@ -28,6 +28,8 @@ public class OrderService implements IOrderService {
     private IDataBaseService dataBaseService;
     @Autowired
     private IMenuService menuService;
+    @Autowired
+    private IReceiptService receiptService;
 
     @Value(value = "${telegram.payment.token}")
     private String paymentToken;
@@ -37,7 +39,7 @@ public class OrderService implements IOrderService {
         MessageTransportDto messageTransportDto = new MessageTransportDto();
         User user = update.getMessage().getFrom();
 
-         messageTransportDto.setDesripion(dataBaseService.deleteReceipt(user.getId()).toChiefForm());
+        messageTransportDto.setDesripion(receiptService.toChiefForm(dataBaseService.deleteReceipt(user.getId())));
         return messageTransportDto;
 
     }
@@ -49,6 +51,9 @@ public class OrderService implements IOrderService {
         }
         if (callback.contains(CUSTOMER_PAY_BUTTON_CALLBACK.getValue())) {
             return operatePaymentRequest(user);
+        }
+        if (callback.contains(ORDER_MENU_CALLBACK.getValue()) && callback.size() == 1) {
+            return buildOrderMenu(user.getId());
         }
         return null;
     }
@@ -63,24 +68,19 @@ public class OrderService implements IOrderService {
         Receipt receipt = dataBaseService.getReceiptByUser(user.getId());
         SendInvoice sendInvoice = new SendInvoice();
         sendInvoice.setTitle(RECEIPT_TITLE.getValue());
-        sendInvoice.setDescription(receipt.toString());
-        sendInvoice.setPayload("SUPA PAYMENT");
+        sendInvoice.setDescription(receiptService.toCustomerForm(receipt));
+        sendInvoice.setPayload(RECEIPT_TITLE.getValue());
         sendInvoice.setProviderToken(paymentToken);
         sendInvoice.setStartParameter("asf123asg");
-        sendInvoice.setCurrency("UAH");
-        List<LabeledPrice> labeledPrices = new ArrayList<>();
-        receipt.getOrders().stream()
-                .forEach(product -> labeledPrices.add(new LabeledPrice(product.getName(), product.getPrice() * 100)));
-        sendInvoice.setPrices(labeledPrices);
+        sendInvoice.setCurrency(PAYMENT_CURRENCY.getValue());
+
+        sendInvoice.setPrices(receiptService.getLabeledPrice(receipt));
         messageTransportDto.setSendInvoice(sendInvoice);
 //        dataBaseService.deleteReceipt(user.getId());
 
         return messageTransportDto;
     }
 
-    public MessageTransportDto informNewOrder() {
-        return null;
-    }
 
     @Override
     public MessageTransportDto buildOrderMenu(Integer userId) {
@@ -90,15 +90,13 @@ public class OrderService implements IOrderService {
         Receipt receipt = dataBaseService.getReceiptByUser(userId);
         if (receipt != null) {
 
-            messageTransportDto.setReceipt(receipt);
-
             buttonNames.add(CUSTOMER_PAY_BUTTON.getValue());
             buttonNames.add(CUSTOMER_CANCEL_BUTTON.getValue());
 
-            buttonCallback.add(ORDER_CALLBACK.getValue() + "/" + CUSTOMER_PAY_BUTTON_CALLBACK.getValue());
-            buttonCallback.add(ORDER_CALLBACK.getValue() + "/" + CUSTOMER_CLEAR_BUTTON_CALLBACK.getValue());
+            buttonCallback.add(ORDER_MENU_CALLBACK.getValue() + "/" + CUSTOMER_PAY_BUTTON_CALLBACK.getValue());
+            buttonCallback.add(ORDER_MENU_CALLBACK.getValue() + "/" + CUSTOMER_CLEAR_BUTTON_CALLBACK.getValue());
 
-            messageTransportDto.setReceipt(receipt);
+            messageTransportDto.setReceiptText(receiptService.toCustomerForm(receipt));
             messageTransportDto.setInlineKeyboardMarkup(keyboardService.buildInlineKeyboard(buttonNames, buttonCallback));
             return messageTransportDto;
         } else {
