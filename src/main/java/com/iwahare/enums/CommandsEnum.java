@@ -9,10 +9,15 @@ public enum CommandsEnum {
     OK_TEXT("Ok"),
     BACK_TEXT("back"),
 
+    ORDER_MENU_ADD_COMMENT_BUTTON_CALLBACK("add-comment"),
     ORDER_MENU_CALLBACK("order"),
-    CUSTOMER_PAY_BUTTON_CALLBACK("pay"),
-    CUSTOMER_CLEAR_BUTTON_CALLBACK("clear"),
-
+    ORDER_MENU_PAY_BUTTON_CALLBACK("pay"),
+    ORDER_MENU_CLEAR_BUTTON_CALLBACK("clear"),
+    ORDER_MENU_SET_TIME_BUTTON_CALLBACK("set-time"),
+    ORDER_MENU_ADD_TIME_BUTTON_CALLBACK("add-time"),
+    FIFTHTEEN_MINS("15 минут"),
+    THIRTY_MINS("30 минут"),
+    SIXTY_MINS("1 час"),
 
     MAKE_ORDER_TEXT("Сделать заказ"),
 
@@ -20,7 +25,7 @@ public enum CommandsEnum {
 
     CANCEL_TEXT("Отмена"),
 
-    MENU_TEXT("menu"),
+    BACK_TO_MENU_CALLBACK("menu"),
 
     COMMAND_NOT_RECOGNIZED_ERROR("Command not recognized");
 

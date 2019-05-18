@@ -49,7 +49,7 @@ public class RequestService implements IRequestService {
         assert callbackData != null && callbackData.size() > 0;
         User user = update.getCallbackQuery().getFrom();
         if (callbackData.contains(ORDER_MENU_CALLBACK.getValue())) {
-            return orderService.operateCallback(callbackData, user);
+            return orderService.operateCallback(callbackData, user, update);
         } else {
             return menuService.operateCallback(callbackData, user);
         }

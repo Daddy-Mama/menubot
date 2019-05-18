@@ -137,10 +137,18 @@ public class Bot extends TelegramLongPollingBot {
             for (Long chatId : messageTransportDto.getChat_id()) {
                 SendMessage sendMessage = new SendMessage();
                 sendMessage.setChatId(chatId);
-                sendMessage.setText(messageTransportDto.getText());
+                sendMessage.setText(messageTransportDto.getPayedOrderInfo().getNotification());
                 execute(sendMessage);
             }
+            executeDeleteMessage(messageTransportDto.getPayedOrderInfo().getDeleteMessage(), update);
+            executeMessage(messageTransportDto, update);
+
         }
+    }
+
+    private final void executeDeleteMessage(DeleteMessage deleteMessage, Update update) throws TelegramApiException {
+        deleteMessage.setChatId(getChatId(update));
+        execute(deleteMessage);
     }
 
     private final void executePrecheckout(MessageTransportDto messageTransportDto) throws TelegramApiException {
@@ -166,6 +174,7 @@ public class Bot extends TelegramLongPollingBot {
         if (messageTransportDto.getSendInvoice() != null) {
             SendInvoice sendInvoice = messageTransportDto.getSendInvoice();
             sendInvoice.setChatId(Math.toIntExact(getChatId(update)));
+            sendInvoice.setPayload(String.valueOf(update.getCallbackQuery().getMessage().getMessageId()));
             execute(sendInvoice);
         }
     }

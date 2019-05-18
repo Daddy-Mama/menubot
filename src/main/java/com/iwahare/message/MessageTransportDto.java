@@ -1,5 +1,6 @@
 package com.iwahare.message;
 
+import com.iwahare.dto.PayedOrderInfo;
 import com.iwahare.dto.Receipt;
 import org.telegram.telegrambots.meta.api.methods.AnswerPreCheckoutQuery;
 import org.telegram.telegrambots.meta.api.methods.send.SendInvoice;
@@ -19,7 +20,7 @@ public class MessageTransportDto {
     private AnswerPreCheckoutQuery answerPreCheckoutQuery;
     private boolean sucPayment;
     private List<Long> chat_id;
-    private DeleteMessage deleteMessage;
+    private PayedOrderInfo payedOrderInfo;
 
     public MessageTransportDto() {
         this.desripion = "";
@@ -35,12 +36,13 @@ public class MessageTransportDto {
         return text;
     }
 
-    public DeleteMessage getDeleteMessage() {
-        return deleteMessage;
+
+    public PayedOrderInfo getPayedOrderInfo() {
+        return payedOrderInfo;
     }
 
-    public void setDeleteMessage(DeleteMessage deleteMessage) {
-        this.deleteMessage = deleteMessage;
+    public void setPayedOrderInfo(PayedOrderInfo payedOrderInfo) {
+        this.payedOrderInfo = payedOrderInfo;
     }
 
     public SendInvoice getSendInvoice() {

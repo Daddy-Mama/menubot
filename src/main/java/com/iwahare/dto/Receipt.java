@@ -19,8 +19,28 @@ public class Receipt {
 
 
     private List<Product> orders = new ArrayList<>();
+    private String time;
+    private boolean commentAvailable;
+    private String comment;
+    private Integer receiptMessageId;
 
     public Receipt() {
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public Integer getReceiptMessageId() {
+        return receiptMessageId;
+    }
+
+    public void setReceiptMessageId(Integer receiptMessageId) {
+        this.receiptMessageId = receiptMessageId;
     }
 
     public void addOrder(Product product) {
@@ -33,6 +53,24 @@ public class Receipt {
 
     public void setOrders(List<Product> orders) {
         this.orders = orders;
+    }
+
+    public boolean isCommentAvailable() {
+        return commentAvailable;
+    }
+
+    public void setCommentAvailable(boolean commentAvailable) {
+        this.commentAvailable = commentAvailable;
+    }
+
+    public String getTime() {
+        if (time==null)
+            return TAKE_IN_5_MINS.getValue() + MINS_TEXT.getValue();
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     @JsonIgnore

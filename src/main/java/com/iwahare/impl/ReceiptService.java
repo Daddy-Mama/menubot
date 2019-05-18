@@ -42,19 +42,33 @@ public class ReceiptService implements IReceiptService {
         return DIVIDER_TEXT.getValue()
                 + "\n"
                 + CHIEF_TITLE_TEXT.getValue()
-                + buildReceiptBody(summary, receipt)
+                + buildReceiptBody(receipt)
+                + "\n"
+                + ADDITIONAL_INFO_TEXT.getValue()
+                + buildTakeTime(receipt.getTime())
+                + "\n\n"
+                + buildTotal(summary)
                 + DIVIDER_TEXT.getValue()
                 + "\n\n";
     }
 
-    private String buildReceiptBody(Integer summary, Receipt receipt) {
-        assert receipt != null;
+    private String buildReceiptBody(Receipt receipt) {
         return "\n\n "
                 + IntStream.range(0, receipt.getOrders().size())
                 .mapToObj(i -> i + 1 + ". " + receipt.getOrders().get(i).toString())
                 .collect(Collectors.joining("\n"))
-                + "\n\n"
-                + TOTAL_TEXT.getValue()
+                + "\n";
+
+    }
+
+    private String buildTakeTime(String time) {
+        return GET_AFTER_TEXT.getValue() + time;
+        //+ MINS_TEXT.getValue();
+
+    }
+
+    private String buildTotal(Integer summary) {
+        return TOTAL_TEXT.getValue()
                 + summary
                 + UAH_TEXT.getValue();
     }
@@ -68,13 +82,12 @@ public class ReceiptService implements IReceiptService {
                 + "\n"
                 + TITLE_TEXT.getValue()
                 + "\n\n "
-                + IntStream.range(0, receipt.getOrders().size())
-                .mapToObj(i -> i + 1 + ". " + receipt.getOrders().get(i).toString())
-                .collect(Collectors.joining("\n"))
+                + buildReceiptBody(receipt)
+                + "\n"
+                + ADDITIONAL_INFO_TEXT.getValue()
+                + buildTakeTime(receipt.getTime())
                 + "\n\n"
-                + TOTAL_TEXT.getValue()
-                + summary
-                + UAH_TEXT.getValue()
+                + buildTotal(summary)
                 + DIVIDER_TEXT.getValue()
                 + "\n\n";
     }
@@ -91,4 +104,6 @@ public class ReceiptService implements IReceiptService {
 
         return labeledPrices;
     }
+
+
 }

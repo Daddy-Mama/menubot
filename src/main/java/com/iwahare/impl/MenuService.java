@@ -57,7 +57,7 @@ public class MenuService implements IMenuService {
 
     public MessageTransportDto operateCategory(String categoryName, Integer userId) {
 
-        if (categoryName.equals(MENU_TEXT.getValue())) {
+        if (categoryName.equals(BACK_TO_MENU_CALLBACK.getValue())) {
             return buildMainMenu(userId);
         }
         Receipt receipt = dataBaseService.getReceiptByUser(userId);
@@ -180,7 +180,7 @@ public class MenuService implements IMenuService {
                     .map(x -> category.getName() + "/" + x)
                     .collect(Collectors.toList()));
             buttonNames.add(BACK_TEXT.getValue());
-            buttonCallback.add(MENU_TEXT.getValue());
+            buttonCallback.add(BACK_TO_MENU_CALLBACK.getValue());
         }
         messageTransportDto.setInlineKeyboardMarkup(keyboardService.buildInlineKeyboard(buttonNames, buttonCallback));
         messageTransportDto.setDesripion(category.getDescription());

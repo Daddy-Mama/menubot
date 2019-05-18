@@ -11,6 +11,6 @@ import java.util.List;
  */
 public interface IOrderService {
     MessageTransportDto buildOrderMenu(Integer userId);
-    MessageTransportDto operateCallback(List<String> callback, User user);
+    MessageTransportDto operateCallback(List<String> callback, User user, Update update);
     MessageTransportDto operatePayment(Update update);
 }
