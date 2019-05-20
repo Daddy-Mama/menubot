@@ -45,6 +45,7 @@ public class ReceiptService implements IReceiptService {
                 + buildReceiptBody(receipt)
                 + "\n"
                 + ADDITIONAL_INFO_TEXT.getValue()
+                + buildComment(receipt)
                 + buildTakeTime(receipt.getTime())
                 + "\n\n"
                 + buildTotal(summary)
@@ -58,13 +59,10 @@ public class ReceiptService implements IReceiptService {
                 .mapToObj(i -> i + 1 + ". " + receipt.getOrders().get(i).toString())
                 .collect(Collectors.joining("\n"))
                 + "\n";
-
     }
 
     private String buildTakeTime(String time) {
         return GET_AFTER_TEXT.getValue() + time;
-        //+ MINS_TEXT.getValue();
-
     }
 
     private String buildTotal(Integer summary) {
@@ -85,11 +83,19 @@ public class ReceiptService implements IReceiptService {
                 + buildReceiptBody(receipt)
                 + "\n"
                 + ADDITIONAL_INFO_TEXT.getValue()
+                + buildComment(receipt)
                 + buildTakeTime(receipt.getTime())
                 + "\n\n"
                 + buildTotal(summary)
                 + DIVIDER_TEXT.getValue()
                 + "\n\n";
+    }
+
+    private String buildComment(Receipt receipt) {
+        if (receipt.getComment() != null) {
+            return COMMENT_TEXT.getValue() + " " + receipt.getComment() + "\n";
+        }
+        return "";
     }
 
     public List<LabeledPrice> getLabeledPrice(Receipt receipt) {
@@ -101,9 +107,6 @@ public class ReceiptService implements IReceiptService {
                 .map(Product::getExtras)
                 .flatMap(extras -> extras.stream())
                 .forEach(extra -> labeledPrices.add(new LabeledPrice(extra.getName(), extra.getPrice() * 100)));
-
         return labeledPrices;
     }
-
-
 }

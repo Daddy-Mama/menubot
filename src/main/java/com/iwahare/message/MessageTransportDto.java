@@ -21,6 +21,7 @@ public class MessageTransportDto {
     private boolean sucPayment;
     private List<Long> chat_id;
     private PayedOrderInfo payedOrderInfo;
+private List<DeleteMessage> deleteMessage;
 
     public MessageTransportDto() {
         this.desripion = "";
@@ -36,6 +37,13 @@ public class MessageTransportDto {
         return text;
     }
 
+    public List<DeleteMessage> getDeleteMessage() {
+        return deleteMessage;
+    }
+
+    public void setDeleteMessage(List<DeleteMessage> deleteMessage) {
+        this.deleteMessage = deleteMessage;
+    }
 
     public PayedOrderInfo getPayedOrderInfo() {
         return payedOrderInfo;

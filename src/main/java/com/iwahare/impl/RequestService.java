@@ -63,6 +63,10 @@ public class RequestService implements IRequestService {
             MessageTransportDto messageTransportDto = menuService.buildMainMenu(update.getMessage().getFrom().getId());
 //            messageTransportDto.setDesripion("Добро пожаловать!");
             return messageTransportDto;
+        }
+        MessageTransportDto mtd = orderService.operateComment(update.getMessage().getMessageId(), message, update.getMessage().getFrom());
+        if (mtd != null) {
+            return mtd;
         } else {
             MessageTransportDto messageTransportDto = new MessageTransportDto();
             messageTransportDto.setDesripion(COMMAND_NOT_RECOGNIZED_ERROR.getValue());

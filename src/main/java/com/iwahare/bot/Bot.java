@@ -25,6 +25,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.iwahare.enums.CommandsEnum.COMMAND_NOT_RECOGNIZED_ERROR;
 
@@ -181,6 +182,17 @@ public class Bot extends TelegramLongPollingBot {
 
     private final void executeMessage(MessageTransportDto messageTransportDto, Update update)
             throws TelegramApiException {
+        if (messageTransportDto.getDeleteMessage() != null) {
+            messageTransportDto.getDeleteMessage().stream()
+                    .map(deleteMessage -> deleteMessage.setChatId(getChatId(update)))
+                    .forEach(x -> {
+                        try {
+                            execute(x);
+                        } catch (TelegramApiException e) {
+                            e.printStackTrace();
+                        }
+                    });
+        }
         if (messageTransportDto.getDesripion() != null) {
             SendMessage sendMessage = new SendMessage();
             sendMessage.setText(messageTransportDto.getText());

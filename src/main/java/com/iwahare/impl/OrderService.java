@@ -81,6 +81,23 @@ public class OrderService implements IOrderService {
         return null;
     }
 
+    public MessageTransportDto operateComment(Integer messageId, String message, User user) {
+        Receipt receipt = dataBaseService.getReceiptByUser(user.getId());
+        if (receipt.isCommentAvailable()) {
+            receipt.setComment(message);
+            List<DeleteMessage> deleteMessages = new ArrayList<>();
+            deleteMessages.add(new DeleteMessage().setMessageId(receipt.getReceiptMessageId()));
+            deleteMessages.add(new DeleteMessage().setMessageId(messageId
+            ));
+            MessageTransportDto messageTransportDto = buildOrderMenu(user.getId());
+            messageTransportDto.setDeleteMessage(deleteMessages);
+
+            return messageTransportDto;
+        }
+
+        return null;
+    }
+
     private MessageTransportDto setCommentAvailable(User user, Update update) {
         MessageTransportDto messageTransportDto = new MessageTransportDto();
         Receipt receipt = dataBaseService.getReceiptByUser(user.getId());

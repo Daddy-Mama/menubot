@@ -13,4 +13,5 @@ public interface IOrderService {
     MessageTransportDto buildOrderMenu(Integer userId);
     MessageTransportDto operateCallback(List<String> callback, User user, Update update);
     MessageTransportDto operatePayment(Update update);
+    MessageTransportDto operateComment(Integer messageId, String message, User user);
 }
