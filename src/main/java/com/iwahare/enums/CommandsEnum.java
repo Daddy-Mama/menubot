@@ -1,14 +1,16 @@
 package com.iwahare.enums;
 
+import static com.iwahare.enums.ReservedWordsEnum.EMOGI_AGREE;
+import static com.iwahare.enums.ReservedWordsEnum.EMOGI_BACK;
+
 public enum CommandsEnum {
     START_TEXT("/start"),
     CATEGORY_TEXT("/category/"),
-    RECEIPT_TEXT("/receipt/"),
+//    RECEIPT_TEXT("/receipt/"),
     PRODUCT_TEXT("/product/"),
-    EXTRAS_TEXT("/extras/"),
-    OK_TEXT("Ok"),
-    BACK_TEXT("back"),
-
+//    EXTRAS_TEXT("/extras/"),
+    OK_TEXT(EMOGI_AGREE.getValue()),
+    BACK_TEXT(EMOGI_BACK.getValue()),
     ORDER_MENU_ADD_COMMENT_BUTTON_CALLBACK("add-comment"),
     ORDER_MENU_CALLBACK("order"),
     ORDER_MENU_PAY_BUTTON_CALLBACK("pay"),
@@ -19,11 +21,11 @@ public enum CommandsEnum {
     THIRTY_MINS("30 минут"),
     SIXTY_MINS("1 час"),
 
-    MAKE_ORDER_TEXT("Сделать заказ"),
+//    MAKE_ORDER_TEXT("Сделать заказ"),
 
-    PAY_TEXT("Оплатить"),
+//    PAY_TEXT("Оплатить"),
 
-    CANCEL_TEXT("Отмена"),
+//    CANCEL_TEXT("Отмена"),
 
     BACK_TO_MENU_CALLBACK("menu"),
 

@@ -35,7 +35,7 @@ public class MbotApplication {
     @Bean
     public static Menu buildMenuSingleton() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        File json = new File("C:\\Users\\intellica\\Documents\\Projects\\menubot\\src\\main\\resources\\menu.json");
+        File json = new File("/home/intellica/Documents/Projects/menubot/src/main/resources/menu.json");
         Menu menu = mapper.readValue(json, Menu.class);
         return menu;
     }

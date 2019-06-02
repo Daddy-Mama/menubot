@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.iwahare.enums.ReservedWordsEnum.MENU_ADDITIONAL_INFO_TEXT;
-import static com.iwahare.enums.ReservedWordsEnum.MENU_TITLE_TEXT;
 
 public class Menu {
     private List<Product> products = new ArrayList<>();
@@ -19,6 +17,8 @@ public class Menu {
     private String photoId;
     private String description;
     private String name;
+    private String preNameEmoji;
+    private String postNameEmoji;
 
     public String getName() {
         return name;
@@ -44,6 +44,30 @@ public class Menu {
         this.description = product.getExtraDescription();
         this.extras = product.getExtras();
         this.products.add(product);
+    }
+
+    public String getButtonName() {
+        String result = new String(name);
+        if (!preNameEmoji.isEmpty()) {
+            result = preNameEmoji + result;
+        }
+        if (!postNameEmoji.isEmpty()) {
+            result = result + postNameEmoji;
+        }
+        return result;
+
+    }
+
+    public String getButtonCallback() {
+        return "/" + name;
+    }
+
+    public String getPreNameEmoji() {
+        return preNameEmoji;
+    }
+
+    public String getPostNameEmoji() {
+        return postNameEmoji;
     }
 
     public List<Extra> getExtras() {

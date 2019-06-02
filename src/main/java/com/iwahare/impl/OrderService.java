@@ -34,7 +34,6 @@ public class OrderService implements IOrderService {
     private IMenuService menuService;
     @Autowired
     private IReceiptService receiptService;
-
     @Value(value = "${telegram.payment.token}")
     private String paymentToken;
 
@@ -109,7 +108,7 @@ public class OrderService implements IOrderService {
         List<String> buttonCallback = new ArrayList<>();
 
         buttonNames.add(CANCEL_BUTTON_TEXT.getValue());
-        buttonCallback.add(ORDER_MENU_CALLBACK.getValue());
+        buttonCallback.add((ORDER_MENU_CALLBACK.getValue()));
 
 
         messageTransportDto.setReceiptText(receiptService.toCustomerForm(receipt));
@@ -132,17 +131,17 @@ public class OrderService implements IOrderService {
         List<String> buttonCallback = new ArrayList<>();
         Receipt receipt = dataBaseService.getReceiptByUser(user.getId());
 
-        buttonNames.add(GET_AFTER_TEXT.getValue() + TAKE_IN_15_MINS.getValue() + MINS_TEXT.getValue());
-        buttonNames.add(GET_AFTER_TEXT.getValue() + TAKE_IN_30_MINS.getValue() + MINS_TEXT.getValue());
-        buttonNames.add(GET_AFTER_TEXT.getValue() + TAKE_IN_1_HOUR.getValue() + HOUR_TEXT.getValue());
+        buttonNames.add( EMOGI_15_MIN.getValue() + TAKE_IN_15_MINS.getValue() + MINS_TEXT.getValue());
+        buttonNames.add( EMOGI_30_MIN.getValue() + TAKE_IN_30_MINS.getValue() + MINS_TEXT.getValue());
+        buttonNames.add( EMOGI_1_HOUR.getValue() + TAKE_IN_1_HOUR.getValue() + HOUR_TEXT.getValue());
 
         buttonNames.add(BACK_TEXT.getValue());
 
-        buttonCallback.add(ORDER_MENU_CALLBACK.getValue() + "/" + ORDER_MENU_ADD_TIME_BUTTON_CALLBACK.getValue() + "/" + FIFTHTEEN_MINS.getValue());
-        buttonCallback.add(ORDER_MENU_CALLBACK.getValue() + "/" + ORDER_MENU_ADD_TIME_BUTTON_CALLBACK.getValue() + "/" + THIRTY_MINS.getValue());
-        buttonCallback.add(ORDER_MENU_CALLBACK.getValue() + "/" + ORDER_MENU_ADD_TIME_BUTTON_CALLBACK.getValue() + "/" + SIXTY_MINS.getValue());
-        buttonCallback.add(ORDER_MENU_CALLBACK.getValue());
-
+        buttonCallback.add((ORDER_MENU_CALLBACK.getValue() + "/" + ORDER_MENU_ADD_TIME_BUTTON_CALLBACK.getValue() + "/" + FIFTHTEEN_MINS.getValue()));
+        buttonCallback.add((ORDER_MENU_CALLBACK.getValue() + "/" + ORDER_MENU_ADD_TIME_BUTTON_CALLBACK.getValue() + "/" + THIRTY_MINS.getValue()));
+        buttonCallback.add((ORDER_MENU_CALLBACK.getValue() + "/" + ORDER_MENU_ADD_TIME_BUTTON_CALLBACK.getValue() + "/" + SIXTY_MINS.getValue()));
+        buttonCallback.add((ORDER_MENU_CALLBACK.getValue()));
+        messageTransportDto.setDesripion(WHEN_COME_TEXT.getValue());
         messageTransportDto.setReceiptText(receiptService.toCustomerForm(receipt));
         messageTransportDto.setInlineKeyboardMarkup(keyboardService.buildInlineKeyboard(buttonNames, buttonCallback));
         return messageTransportDto;
@@ -187,11 +186,11 @@ public class OrderService implements IOrderService {
             buttonNames.add(BACK_TEXT.getValue());
 
 
-            buttonCallback.add(ORDER_MENU_CALLBACK.getValue() + "/" + ORDER_MENU_PAY_BUTTON_CALLBACK.getValue());
-            buttonCallback.add(ORDER_MENU_CALLBACK.getValue() + "/" + ORDER_MENU_CLEAR_BUTTON_CALLBACK.getValue());
-            buttonCallback.add(ORDER_MENU_CALLBACK.getValue() + "/" + ORDER_MENU_SET_TIME_BUTTON_CALLBACK.getValue());
-            buttonCallback.add(ORDER_MENU_CALLBACK.getValue() + "/" + ORDER_MENU_ADD_COMMENT_BUTTON_CALLBACK.getValue());
-            buttonCallback.add(BACK_TO_MENU_CALLBACK.getValue());
+            buttonCallback.add((ORDER_MENU_CALLBACK.getValue() + "/" + ORDER_MENU_PAY_BUTTON_CALLBACK.getValue()));
+            buttonCallback.add((ORDER_MENU_CALLBACK.getValue() + "/" + ORDER_MENU_CLEAR_BUTTON_CALLBACK.getValue()));
+            buttonCallback.add((ORDER_MENU_CALLBACK.getValue() + "/" + ORDER_MENU_SET_TIME_BUTTON_CALLBACK.getValue()));
+            buttonCallback.add((ORDER_MENU_CALLBACK.getValue() + "/" + ORDER_MENU_ADD_COMMENT_BUTTON_CALLBACK.getValue()));
+            buttonCallback.add((BACK_TO_MENU_CALLBACK.getValue()));
             messageTransportDto.setReceiptText(receiptService.toCustomerForm(receipt));
             messageTransportDto.setInlineKeyboardMarkup(keyboardService.buildInlineKeyboard(buttonNames, buttonCallback));
             return messageTransportDto;

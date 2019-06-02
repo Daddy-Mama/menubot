@@ -44,17 +44,20 @@ public class ReceiptService implements IReceiptService {
                 + CHIEF_TITLE_TEXT.getValue()
                 + buildReceiptBody(receipt)
                 + "\n"
-                + ADDITIONAL_INFO_TEXT.getValue()
+                + ADDITIONAL_INFO_TEXT.getValue() + "\n"
+
+                + buildTakeTime(receipt.getTime()) + "\n"
                 + buildComment(receipt)
-                + buildTakeTime(receipt.getTime())
+
                 + "\n\n"
                 + buildTotal(summary)
+                + "\n"
                 + DIVIDER_TEXT.getValue()
                 + "\n\n";
     }
 
     private String buildReceiptBody(Receipt receipt) {
-        return "\n\n "
+        return "\n\n"
                 + IntStream.range(0, receipt.getOrders().size())
                 .mapToObj(i -> i + 1 + ". " + receipt.getOrders().get(i).toString())
                 .collect(Collectors.joining("\n"))
@@ -79,14 +82,16 @@ public class ReceiptService implements IReceiptService {
         return DIVIDER_TEXT.getValue()
                 + "\n"
                 + TITLE_TEXT.getValue()
-                + "\n\n "
+                + "\n"
                 + buildReceiptBody(receipt)
                 + "\n"
-                + ADDITIONAL_INFO_TEXT.getValue()
+                + ADDITIONAL_INFO_TEXT.getValue() + "\n"
+                + buildTakeTime(receipt.getTime()) + "\n"
                 + buildComment(receipt)
-                + buildTakeTime(receipt.getTime())
+
                 + "\n\n"
                 + buildTotal(summary)
+                + "\n"
                 + DIVIDER_TEXT.getValue()
                 + "\n\n";
     }

@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.iwahare.enums.CommandsEnum.*;
-import static com.iwahare.enums.ReservedWordsEnum.MY_ORDERS_TEXT;
 
 
 @Service

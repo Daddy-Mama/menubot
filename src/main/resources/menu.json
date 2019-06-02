@@ -1,61 +1,113 @@
 {
-  "description": "        ШАУРМЭН\n\nМеню: ",
+  "description": "\ud83d\udc47Меню\ud83d\udc47",
   "categories": [
     {
       "name": "Шаурма",
-      "description": "Шаурма мини: 35 грн\nШаурма стандарт: 50 грн\nШаурма двойная: 100 грн",
+      "preNameEmoji": "\uD83C\uDF2F",
+      "postNameEmoji": "",
+      "description": "\ud83d\udd25\ud83c\udfaf Выберите размер \ud83c\udfaf\ud83d\udd25",
       "products": [
         {
-          "name": "Шаурма мини [35грн]",
+          "name": "Мини",
+          "preNameEmoji": "",
+          "postNameEmoji": "\uD83D\uDCB0",
           "price": "35",
           "extras": [
             {
-              "name": "Сыр",
+              "name": " Сыр",
+              "preNameEmoji": "\uD83E\uDDC0",
               "price": "10"
             },
             {
-              "name": "Картошка",
+              "name": " Картошка",
+              "preNameEmoji": "\uD83C\uDF5F",
               "price": "10"
             },
             {
-              "name": "Соус",
+              "name": " Соус",
+              "preNameEmoji": "\uD83E\uDD6B",
               "price": "50"
             }
           ],
-          "extraDescription": "Вы можете добавить:"
+          "extraDescription": "\ud83e\uddc2\uD83C\uDF74 Добавить ингридиенты:"
         },
         {
-          "name": "Шаурма стандарт [50 грн]",
-          "price": "50"
+          "name": "Стандарт",
+          "preNameEmoji": "",
+          "postNameEmoji": "\uD83D\uDCB0",
+          "price": "50",
+          "extras": [
+            {
+              "name": " Сыр",
+              "preNameEmoji": "\uD83E\uDDC0",
+              "price": "10"
+            },
+            {
+              "name": " Картошка",
+              "preNameEmoji": "\uD83C\uDF5F",
+              "price": "10"
+            },
+            {
+              "name": " Соус",
+              "preNameEmoji": "\uD83E\uDD6B",
+              "price": "50"
+            }
+          ],
+          "extraDescription": "\ud83e\uddc2\uD83C\uDF74 Добавить ингридиенты:"
         },
         {
-          "name": "Шаурма двойная [100 грн]",
-          "price": "100"
+          "name": "Двойная",
+          "preNameEmoji": "",
+          "postNameEmoji": "\uD83D\uDCB0",
+          "price": "100",
+          "extras": [
+            {
+              "name": " Сыр",
+              "preNameEmoji": "\uD83E\uDDC0",
+              "price": "10"
+            },
+            {
+              "name": " Картошка",
+              "preNameEmoji": "\uD83C\uDF5F",
+              "price": "10"
+            },
+            {
+              "name": " Соус",
+              "preNameEmoji": "\uD83E\uDD6B",
+              "price": "50"
+            }
+          ],
+
+          "extraDescription": "\ud83e\uddc2\uD83C\uDF74 Добавить ингридиенты: "
         }
       ],
       "categories": []
     },
     {
-      "name": "Люля-кебаб",
-      "description": "Люля-кебаб мини: 35 грн\nЛюля-кебаб стандарт: 50 грн\nЛюля-кебаб двойная: 100 грн",
+      "name": "Люля-кебаб ",
+      "preNameEmoji": "\uD83C\uDF62",
+      "postNameEmoji": "",
+
+      "description": "\uD83D\uDD25\uD83C\uDFAF Выберите размер\uD83C\uDFAF\uD83D\uDD25",
       "products": [
         {
-          "name": "Люля-кебаб мини",
-          "price": "35",
-          "extras": [
-            {
-              "name": "Сыр",
-              "price": "10"
-            }
-          ],
-          "extraDescription": "Вы можете добавить сыр:)"
+          "name": "Мини",
+          "preNameEmoji": "",
+          "postNameEmoji": "\uD83D\uDCB0",
+          "price": "35"
         },
         {
-          "name": "Люля-кебаб стандарт",
+          "name": "Стандарт",
+          "preNameEmoji": "",
+          "postNameEmoji": "\uD83D\uDCB0",
+
           "price": "50"
         },
         {
-          "name": "Люля-кебаб двойная",
+          "name": "Двойная",
+          "preNameEmoji": "",
+          "postNameEmoji": "\uD83D\uDCB0",
+
           "price": "100"
         }
       ],

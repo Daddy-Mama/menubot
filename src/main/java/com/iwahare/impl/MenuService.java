@@ -93,6 +93,8 @@ public class MenuService implements IMenuService {
         }
 
         product.setExtras(null);
+        product.setPreNameEmoji(category.getPreNameEmoji());
+        product.setCategoryName(categoryName);
         Receipt receipt = dataBaseService.buildReceipt(userId, product);
         messageTransportDto.setReceiptText(receiptService.toCustomerForm(receipt));
 
@@ -144,11 +146,12 @@ public class MenuService implements IMenuService {
         Receipt receipt = dataBaseService.getReceiptByUser(userId);
         if (!menu.getCategories().isEmpty()) {
             buttonNames.addAll(menu.getCategories().stream()
-                    .map(Menu::getName)
+                    .map(Menu::getButtonName)
                     .filter(x -> x != null)
                     .collect(Collectors.toList()));
-            buttonCallback.addAll(buttonNames.stream()
-                    .map(x -> "/" + x)
+            buttonCallback.addAll(menu.getCategories().stream()
+                    .map(Menu::getButtonCallback)
+                    .filter(x -> x != null)
                     .collect(Collectors.toList()));
         }
         messageTransportDto.setReceiptText(receiptService.toCustomerForm(receipt));
@@ -172,12 +175,12 @@ public class MenuService implements IMenuService {
         List<String> buttonCallback = new ArrayList<>();
         if (!category.getProducts().isEmpty()) {
             buttonNames.addAll(category.getProducts().stream()
-                    .map(Product::getName)
+                    .map(Product::getButtonName)
                     .filter(x -> x != null)
                     .collect(Collectors.toList()));
 
-            buttonCallback.addAll(buttonNames.stream()
-                    .map(x -> category.getName() + "/" + x)
+            buttonCallback.addAll(category.getProducts().stream()
+                    .map(x->category.getButtonCallback()+x.getButtonCallback())
                     .collect(Collectors.toList()));
             buttonNames.add(BACK_TEXT.getValue());
             buttonCallback.add(BACK_TO_MENU_CALLBACK.getValue());
@@ -194,132 +197,21 @@ public class MenuService implements IMenuService {
         List<String> buttonCallback = new ArrayList<>();
 
         buttonNames.addAll(product.getExtras().stream()
-                .map(Extra::getName)
+                .map(Extra::getButtonName)
                 .filter(x -> x != null)
                 .collect(Collectors.toList()));
-        buttonCallback.addAll(buttonNames.stream()
-                .map(x -> category.getName() + "/" + product.getName() + "/" + x)
+        buttonCallback.addAll(product.getExtras().stream()
+                .map(x -> category.getButtonCallback() + "/" + product.getButtonCallback() + "/" + x.getButtonCallback())
                 .collect(Collectors.toList()));
         buttonNames.add(OK_TEXT.getValue());
         buttonNames.add(BACK_TEXT.getValue());
 
-        buttonCallback.add("/" + category.getName());
-        buttonCallback.add("/" + BACK_TEXT.getValue() + "/" + category.getName());
+        buttonCallback.add(BACK_TO_MENU_CALLBACK.getValue());
+        buttonCallback.add("/" + (BACK_TEXT.getValue() + "/" + category.getButtonCallback()));
 
         messageTransportDto.setInlineKeyboardMarkup(keyboardService.buildInlineKeyboard(buttonNames, buttonCallback));
         messageTransportDto.setDesripion(product.getExtraDescription());
         messageTransportDto.setPhotoId(menu.getPhotoId());
         return messageTransportDto;
     }
-
-//    public MessageTransportDto buildMenu(MenuBuilder builder) {
-//        MessageTransportDto messageTransportDto = new MessageTransportDto();
-//        List<String> buttonNames = new ArrayList<>();
-//        List<String> buttonCallback = new ArrayList<>();
-//        if (builder.getExtras() != null) {
-//            buttonNames.addAll(builder.getExtras().stream()
-//                    .map(Extra::getName)
-//                    .filter(x -> x != null)
-//                    .collect(Collectors.toList()));
-//            buttonNames.add(OK_TEXT.getValue());
-//            buttonNames.add(BACK_TEXT.getValue());
-//            buttonCallback.addAll(builder.getExtras().stream()
-//                    .map(Extra::getName)
-//                    .map(x -> builder.getCategory().getName() + "/" + builder.getProduct().getName() + "/" + builder.getProduct().getExtraUrl() + "/" + x)
-//                    .filter(x -> x != null)
-//                    .collect(Collectors.toList()));
-//            buttonCallback.add(OK_CALLBACK_TEXT.getValue());
-//            buttonCallback.add(BACK_CALLBACK_TEXT.getValue());
-//
-//        } else if (builder.getCategory() != null) {
-//            if (!builder.getCategory().getCategories().isEmpty()) {
-//                buttonNames.addAll(menu.getCategories().stream()
-//                        .map(Menu::getName)
-//                        .filter(x -> x != null)
-//                        .collect(Collectors.toList()));
-//                buttonCallback.addAll()
-//            }
-//            //operate product
-//            if (!menu.getProducts().isEmpty()) {
-//                buttonNames.addAll(menu.getProducts().stream()
-//                        .map(Product::getName)
-//                        .filter(x -> x != null)
-//                        .collect(Collectors.toList()));
-//                buttonNames.add(BACK_TEXT.getValue());
-//            }
-//        }
-//
-//
-//        if (builder.)
-//            //build Inline keyboard
-//            List<String> keyboardIcons = new ArrayList<>();
-//        String buttonCallbackData = "";
-//        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-//        if (menu != null) {
-//            if (!menu.getCategories().isEmpty()) {
-//                keyboardIcons.addAll(menu.getCategories().stream()
-//                        .map(Menu::getName)
-//                        .filter(x -> x != null)
-//                        .collect(Collectors.toList()));
-//            }
-//            //operate product
-//            if (!menu.getProducts().isEmpty()) {
-//                keyboardIcons.addAll(menu.getProducts().stream()
-//                        .map(Product::getName)
-//                        .filter(x -> x != null)
-//                        .collect(Collectors.toList()));
-////                buttonCallbackData = PRODUCT_TEXT.getValue();
-//                keyboardIcons.add(BACK_TEXT.getValue());
-//            }
-//            //operate extras for product
-//            if (!menu.getExtras().isEmpty()) {
-//                keyboardIcons.addAll(menu.getExtras().stream()
-//                        .map(Extra::getName)
-//                        .filter(x -> x != null)
-//                        .collect(Collectors.toList()));
-//                keyboardIcons.add(OK_TEXT.getValue());
-//                keyboardIcons.add(BACK_TEXT.getValue());
-//            }
-//
-//            messageTransportDto.setInlineKeyboardMarkup(inlineKeyboardMarkup);
-//            messageTransportDto.setDesripion(menu.getDescription());
-//            messageTransportDto.setPhotoId(menu.getPhotoId());
-//        } else {
-//            messageTransportDto.setDesripion(COMMAND_NOT_RECOGNIZED_ERROR.getValue());
-//
-//        }
-//
-//        return messageTransportDto;
-//    }
-
-//    private InlineKeyboardMarkup buildKeyboard(List<String> keyboardIcons, List<String> keyboardCallback) {
-//        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-//        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-//        assert keyboardCallback.size() == keyboardIcons.size();
-//        Iterator<String> iteratorIcon = keyboardIcons.iterator();
-//        Iterator<String> iteratorCallback = keyboardCallback.iterator();
-//        while (iteratorIcon.hasNext()) {
-//            String buttonName = iteratorIcon.next();
-//            InlineKeyboardButton button = new InlineKeyboardButton(buttonName);
-//            List<InlineKeyboardButton> keyboardButtonsRow = new ArrayList<>();
-//
-//            button.setCallbackData(iteratorCallback.next());
-//            keyboardButtonsRow.add(button);
-//
-//            if (buttonName.equals(OK_TEXT.getValue())) {
-//                buttonName = iteratorIcon.next();
-//                InlineKeyboardButton backButton = new InlineKeyboardButton(buttonName);
-//                backButton.setCallbackData(iteratorCallback.next());
-//                keyboardButtonsRow.add(backButton);
-//                buttons.add(keyboardButtonsRow);
-//                break;
-//            }
-//
-//            buttons.add(keyboardButtonsRow);
-//
-//
-//        }
-//        inlineKeyboardMarkup.setKeyboard(buttons);
-//        return inlineKeyboardMarkup;
-//    }
 }
