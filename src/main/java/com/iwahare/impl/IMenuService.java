@@ -17,7 +17,7 @@ public interface IMenuService {
     MessageTransportDto operateCategory(String categoryName, Integer userId);
     MessageTransportDto operateExtra(String categoryName,String productName, Integer userId, String extraName);
     MessageTransportDto buildCategory(Menu category);
-    MessageTransportDto buildProductMenu(Menu category, Product product);
+    MessageTransportDto buildProductMenu(Integer userId,Menu category, Product product);
     MessageTransportDto buildMainMenu(Integer userId);
     MessageTransportDto operateBackCommand(String categoryName, Integer userId);
 }

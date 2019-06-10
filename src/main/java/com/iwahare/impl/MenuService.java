@@ -7,6 +7,7 @@ import com.iwahare.message.MessageTransportDto;
 import com.iwahare.dto.Receipt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.iwahare.enums.CommandsEnum.*;
-import static com.iwahare.enums.ReservedWordsEnum.ORDER_MENU_BUTTON;
+import static com.iwahare.enums.ReservedWordsEnum.*;
 
 /**
  * Created by Артем on 03.05.2019.
@@ -83,19 +84,21 @@ public class MenuService implements IMenuService {
         category = menu.getCategories().stream()
                 .filter(x -> x.getName().equals(categoryName))
                 .findFirst().get();
-        if (product.getExtras() != null) {
 
-
-            messageTransportDto = buildProductMenu(category, product);
-        } else {
-
-            messageTransportDto = buildCategory(category);
-        }
+        Product productSchema = new Product(product);
 
         product.setExtras(null);
         product.setPreNameEmoji(category.getPreNameEmoji());
         product.setCategoryName(categoryName);
         Receipt receipt = dataBaseService.buildReceipt(userId, product);
+
+        if (productSchema.getExtras() != null) {
+            messageTransportDto = buildProductMenu(userId, category, productSchema);
+        } else {
+            messageTransportDto = buildCategory(category);
+        }
+
+
         messageTransportDto.setReceiptText(receiptService.toCustomerForm(receipt));
 
         return messageTransportDto;
@@ -112,7 +115,6 @@ public class MenuService implements IMenuService {
         Menu category = menu.getCategories().stream()
                 .filter(x -> x.getName().equals(categoryName))
                 .findFirst().get();
-        MessageTransportDto messageTransportDto = buildProductMenu(category, productSchema);
 
         Product product = dataBaseService.getLastProductInReceipt(userId);
         Extra extra = category.getProducts().stream()
@@ -127,6 +129,7 @@ public class MenuService implements IMenuService {
             product.addExtra(extra);
         }
         Receipt receipt = dataBaseService.replaceLastProduct(userId, product);
+        MessageTransportDto messageTransportDto = buildProductMenu(userId, category, productSchema);
 
         messageTransportDto.setReceiptText(receiptService.toCustomerForm(receipt));
 
@@ -180,7 +183,7 @@ public class MenuService implements IMenuService {
                     .collect(Collectors.toList()));
 
             buttonCallback.addAll(category.getProducts().stream()
-                    .map(x->category.getButtonCallback()+x.getButtonCallback())
+                    .map(x -> category.getButtonCallback() + x.getButtonCallback())
                     .collect(Collectors.toList()));
             buttonNames.add(BACK_TEXT.getValue());
             buttonCallback.add(BACK_TO_MENU_CALLBACK.getValue());
@@ -191,15 +194,33 @@ public class MenuService implements IMenuService {
         return messageTransportDto;
     }
 
-    public MessageTransportDto buildProductMenu(Menu category, Product product) {
+    public MessageTransportDto buildProductMenu(Integer userId, Menu category, Product product) {
         MessageTransportDto messageTransportDto = new MessageTransportDto();
         List<String> buttonNames = new ArrayList<>();
         List<String> buttonCallback = new ArrayList<>();
+        Receipt receipt = dataBaseService.getReceiptByUser(userId);
+
 
         buttonNames.addAll(product.getExtras().stream()
                 .map(Extra::getButtonName)
                 .filter(x -> x != null)
                 .collect(Collectors.toList()));
+
+        if (receipt != null && receipt.getOrders() != null) {
+            List<Product> orders = receipt.getOrders();
+            List<Extra> extras = orders.get(orders.size() - 1).getExtras();
+            if (extras != null) {
+                extras.stream()
+                        .map(extra -> extra.getButtonName())
+//                        .filter(name-> buttonNames.contains(name))
+                        .forEach(name -> {
+                            if (buttonNames.contains(name)) {
+                                int i = buttonNames.indexOf(name);
+                                buttonNames.set(i, buttonNames.get(i).replace(EMOGI_ADD_EXTRA.getValue(), EMOGI_REMOVE_EXTRA.getValue()));
+                            }
+                        });
+            }
+        }
         buttonCallback.addAll(product.getExtras().stream()
                 .map(x -> category.getButtonCallback() + "/" + product.getButtonCallback() + "/" + x.getButtonCallback())
                 .collect(Collectors.toList()));

@@ -4,10 +4,7 @@ package com.iwahare.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.iwahare.enums.ReservedWordsEnum;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.iwahare.enums.ReservedWordsEnum.EMOGI_MONEY_PACK;
@@ -38,6 +35,13 @@ public class Product {
         this.price = (product.getPrice());
         this.extras = product.getExtras();
         this.extraDescription = product.getExtraDescription();
+        this.preNameEmoji = product.getPreNameEmoji();
+        this.postNameEmoji=product.getPostNameEmoji();
+        this.categoryName=product.getCategoryName();
+    }
+
+    public String getCategoryName() {
+        return categoryName;
     }
 
     public void setCategoryName(String categoryName) {
@@ -62,6 +66,8 @@ public class Product {
         }
         if (!extras.contains(extra)) {
             extras.add(extra);
+        } else {
+            extras.remove(extra);
         }
     }
 
@@ -113,20 +119,22 @@ public class Product {
     }
 
     @JsonIgnore
-    @Override
-    public String toString() {
-        String res = this.preNameEmoji+this.categoryName + " " + this.name;
-        String sufix = new String(  EMOGI_MONEY_PACK.getValue()+ price + " " + ReservedWordsEnum.UAH_TEXT.getValue());
-        int len= 30 - res.length() - sufix.length();
-        if (len>0){
+    public String toString(long count) {
+        String res = this.preNameEmoji + this.categoryName + " " + this.name;
+        if (count > 1) {
+            res = res + "(" + "x" + count + ")";
+        }
+        String sufix = new String(EMOGI_MONEY_PACK.getValue() + price * count + " " + ReservedWordsEnum.UAH_TEXT.getValue());
+        int len = 30 - res.length() - sufix.length();
+        if (len > 0) {
             char[] data = new char[len];
             Arrays.fill(data, ' ');
 
             res = res + new String(data);
         }
-        res = res   + sufix;
+        res = res + sufix;
         if (this.extras != null) {
-            res = res + extras.stream().map(Extra::toString).collect(Collectors.joining());
+            res = res + extras.stream().map(extra -> extra.toString(count)).collect(Collectors.joining());
         }
         return res;
     }
@@ -140,5 +148,21 @@ public class Product {
                     .collect(Collectors.joining("/"));
         }
         return res;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product)) return false;
+        Product product = (Product) o;
+        return Objects.equals(name, product.name) &&
+                Objects.equals(price, product.price) &&
+                Objects.equals(extras, product.extras) &&
+                Objects.equals(categoryName, product.categoryName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, price, extras, categoryName);
     }
 }

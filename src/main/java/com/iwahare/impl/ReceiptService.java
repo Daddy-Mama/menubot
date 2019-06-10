@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.payments.LabeledPrice;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -57,11 +59,27 @@ public class ReceiptService implements IReceiptService {
     }
 
     private String buildReceiptBody(Receipt receipt) {
-        return "\n\n"
-                + IntStream.range(0, receipt.getOrders().size())
-                .mapToObj(i -> i + 1 + ". " + receipt.getOrders().get(i).toString())
-                .collect(Collectors.joining("\n"))
-                + "\n";
+        String stringReceipt = "";
+//                + IntStream.range(0, receipt.getOrders().size())
+//                .mapToObj(i -> i + 1 + ". " + receipt.getOrders().get(i).toString())
+//                .collect(Collectors.joining("\n"))
+//                + "\n";
+        Set<Product> productSet = new HashSet<>();
+        int i = 0;
+        for (Product p : receipt.getOrders()) {
+
+            if (productSet.add(p)) {
+                i++;
+                long count = receipt.getOrders().stream()
+                        .filter(product -> product.equals(p))
+                        .count();
+                stringReceipt = stringReceipt + i + ". " + p.toString(count) + "\n";
+
+            }
+
+        }
+        stringReceipt = stringReceipt + "\n";
+        return stringReceipt;
     }
 
     private String buildTakeTime(String time) {

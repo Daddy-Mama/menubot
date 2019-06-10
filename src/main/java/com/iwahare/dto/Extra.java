@@ -5,8 +5,7 @@ import com.iwahare.enums.ReservedWordsEnum;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static com.iwahare.enums.ReservedWordsEnum.EMOGI_MONEY_PACK;
-import static com.iwahare.enums.ReservedWordsEnum.UAH_TEXT;
+import static com.iwahare.enums.ReservedWordsEnum.*;
 
 public class Extra {
     private String name;
@@ -26,7 +25,7 @@ public class Extra {
         if (!preNameEmoji.isEmpty()) {
             result = preNameEmoji + result;
         }
-        result = result + "   " + price + EMOGI_MONEY_PACK.getValue();
+        result = EMOGI_ADD_EXTRA.getValue()+ result + "   " + price + EMOGI_MONEY_PACK.getValue();
         return result;
 
     }
@@ -51,21 +50,15 @@ public class Extra {
         this.price = price;
     }
 
-    @Override
-    public String toString() {
+
+    public String toString(long count) {
         String result = new String(name);
         if (!preNameEmoji.isEmpty()) {
             result = preNameEmoji + result;
         }
         result = "   +  " + result;
-        String sufix = new String(  EMOGI_MONEY_PACK.getValue()+ price + " " + ReservedWordsEnum.UAH_TEXT.getValue());
-//        int len = 45 - result.length() - sufix.length();
-//        if (len>0){
-//            char[] data = new char[len];
-//            Arrays.fill(data, ' ');
-//
-//            result = result + new String(data);
-//        }
+        String sufix = new String(  EMOGI_MONEY_PACK.getValue()+ price*count + " " + ReservedWordsEnum.UAH_TEXT.getValue());
+
         result = "\n"+ result +"   "+ sufix;
 
         return result;

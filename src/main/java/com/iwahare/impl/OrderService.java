@@ -179,17 +179,18 @@ public class OrderService implements IOrderService {
         if (receipt != null) {
 
             buttonNames.add(ORDER_MENU_PAY_BUTTON.getValue());
-            buttonNames.add(ORDER_MENU_CANCEL_BUTTON.getValue());
             buttonNames.add(ORDER_MENU_SET_TIME_BUTTON.getValue());
             buttonNames.add(COMMENT_TEXT.getValue());
+            buttonNames.add(ORDER_MENU_CANCEL_BUTTON.getValue());
 
             buttonNames.add(BACK_TEXT.getValue());
 
 
             buttonCallback.add((ORDER_MENU_CALLBACK.getValue() + "/" + ORDER_MENU_PAY_BUTTON_CALLBACK.getValue()));
-            buttonCallback.add((ORDER_MENU_CALLBACK.getValue() + "/" + ORDER_MENU_CLEAR_BUTTON_CALLBACK.getValue()));
             buttonCallback.add((ORDER_MENU_CALLBACK.getValue() + "/" + ORDER_MENU_SET_TIME_BUTTON_CALLBACK.getValue()));
             buttonCallback.add((ORDER_MENU_CALLBACK.getValue() + "/" + ORDER_MENU_ADD_COMMENT_BUTTON_CALLBACK.getValue()));
+            buttonCallback.add((ORDER_MENU_CALLBACK.getValue() + "/" + ORDER_MENU_CLEAR_BUTTON_CALLBACK.getValue()));
+
             buttonCallback.add((BACK_TO_MENU_CALLBACK.getValue()));
             messageTransportDto.setReceiptText(receiptService.toCustomerForm(receipt));
             messageTransportDto.setInlineKeyboardMarkup(keyboardService.buildInlineKeyboard(buttonNames, buttonCallback));

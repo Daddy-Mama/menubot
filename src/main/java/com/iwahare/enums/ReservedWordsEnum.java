@@ -7,7 +7,8 @@ import java.util.Collections;
 public enum ReservedWordsEnum {
 
     //EMOGI CODES
-
+    EMOGI_ADD_EXTRA("\u2714\ufe0f"),
+    EMOGI_REMOVE_EXTRA("\u2716\ufe0f"),
     EMOGI_MONEY_PACK("\ud83d\udcb0"),
     EMOGI_CLOCK("\u23f0"),
     EMOGI_PINNER("\ud83d\udccc"),
@@ -34,7 +35,7 @@ public enum ReservedWordsEnum {
     //    MENU_TITLE_TEXT("Заголовок меню"),
     COMMENT_TEXT(EMOGI_COMMENT.getValue() + "Комментарий к заказу:"),
     //    MENU_ADDITIONAL_INFO_TEXT("Menu additional info"),
-    INPUT_COMMENT_TEXT(EMOGI_MIND_CLOUD.getValue() + "Напишите комментарий к заказу!"),
+    INPUT_COMMENT_TEXT(EMOGI_MIND_CLOUD.getValue() + "Напишите комментарий к заказу!" + "\n" + "Здесь можно попросить поострее\ud83c\udf36, \n"+ "или упаковать 'с собой'\ud83d\udce6"),
     //    EMPTY_RECEIPT_ERROR_TEXT("You have not made order yet!"),
 
     CANCEL_BUTTON_TEXT(EMOGI_CANCEL.getValue() + "Отменить"),
