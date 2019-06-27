@@ -112,6 +112,36 @@
         }
       ],
       "categories": []
+    },
+    {
+      "name": "Люля-кебаб 123132132132",
+      "preNameEmoji": "\uD83C\uDF62",
+      "postNameEmoji": "",
+
+      "description": "\uD83D\uDD25\uD83C\uDFAF Выберите размер\uD83C\uDFAF\uD83D\uDD25",
+      "products": [
+        {
+          "name": "Мини",
+          "preNameEmoji": "",
+          "postNameEmoji": "\uD83D\uDCB0",
+          "price": "35"
+        },
+        {
+          "name": "Стандарт",
+          "preNameEmoji": "",
+          "postNameEmoji": "\uD83D\uDCB0",
+
+          "price": "50"
+        },
+        {
+          "name": "Двойная",
+          "preNameEmoji": "",
+          "postNameEmoji": "\uD83D\uDCB0",
+
+          "price": "100"
+        }
+      ],
+      "categories": []
     }
   ],
   "products": []

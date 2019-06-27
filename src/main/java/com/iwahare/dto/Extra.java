@@ -57,7 +57,7 @@ public class Extra {
             result = preNameEmoji + result;
         }
         result = "   +  " + result;
-        String sufix = new String(  EMOGI_MONEY_PACK.getValue()+ price*count + " " + ReservedWordsEnum.UAH_TEXT.getValue());
+        String sufix = new String(   price*count + " " + ReservedWordsEnum.UAH_TEXT.getValue());
 
         result = "\n"+ result +"   "+ sufix;
 

@@ -124,7 +124,7 @@ public class Product {
         if (count > 1) {
             res = res + "(" + "x" + count + ")";
         }
-        String sufix = new String(EMOGI_MONEY_PACK.getValue() + price * count + " " + ReservedWordsEnum.UAH_TEXT.getValue());
+        String sufix = new String( price * count + " " + ReservedWordsEnum.UAH_TEXT.getValue());
         int len = 30 - res.length() - sufix.length();
         if (len > 0) {
             char[] data = new char[len];

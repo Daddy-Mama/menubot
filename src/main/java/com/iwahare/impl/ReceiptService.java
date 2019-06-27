@@ -44,6 +44,7 @@ public class ReceiptService implements IReceiptService {
         return DIVIDER_TEXT.getValue()
                 + "\n"
                 + CHIEF_TITLE_TEXT.getValue()
+                +"\n"
                 + buildReceiptBody(receipt)
                 + "\n"
                 + ADDITIONAL_INFO_TEXT.getValue() + "\n"

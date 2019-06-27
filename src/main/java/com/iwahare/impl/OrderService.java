@@ -157,7 +157,7 @@ public class OrderService implements IOrderService {
         Receipt receipt = dataBaseService.getReceiptByUser(user.getId());
         SendInvoice sendInvoice = new SendInvoice();
         sendInvoice.setTitle(RECEIPT_TITLE.getValue());
-        sendInvoice.setDescription(receiptService.toCustomerForm(receipt));
+        sendInvoice.setDescription(RECEIPT_TITLE.getValue());
         sendInvoice.setPayload("");
         sendInvoice.setProviderToken(paymentToken);
         sendInvoice.setStartParameter("asf123asg");

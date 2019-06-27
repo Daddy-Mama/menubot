@@ -17,4 +17,5 @@ public interface IDataBaseService {
     Receipt replaceLastProduct(Integer key, Product product);
 
     void deleteLastProduct(Integer key);
+    void deleteOldReceipts();
 }

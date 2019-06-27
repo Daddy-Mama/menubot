@@ -5,13 +5,13 @@ import com.iwahare.dto.Receipt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DatabaseService implements IDataBaseService {
     private Map<Integer, Receipt> receiptMap;
+    private final Integer timer = 600000;
 
     @Autowired
     public DatabaseService() {
@@ -24,8 +24,15 @@ public class DatabaseService implements IDataBaseService {
             receipt = new Receipt();
         }
         receipt.addOrder(product);
+        receipt.setCalendar(getCalendar());
         saveReceipt(key, receipt);
         return receipt;
+    }
+
+    private Calendar getCalendar() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        return calendar;
     }
 
     public Receipt replaceLastProduct(Integer key, Product product) {
@@ -34,6 +41,7 @@ public class DatabaseService implements IDataBaseService {
             receipt = receiptMap.get(key);
             receipt.getOrders().remove(receipt.getOrders().size() - 1);
             receipt.addOrder(product);
+            receipt.setCalendar(getCalendar());
             receiptMap.replace(key, receipt);
         } else {
             receipt = buildReceipt(key, product);
@@ -43,6 +51,7 @@ public class DatabaseService implements IDataBaseService {
 
     public void saveReceipt(Integer key, Receipt receipt) {
         if (receiptMap.containsKey(key)) {
+            receipt.setCalendar(getCalendar());
             receiptMap.replace(key, receipt);
         } else {
             receiptMap.put(key, receipt);
@@ -58,7 +67,7 @@ public class DatabaseService implements IDataBaseService {
 
     public Receipt deleteReceipt(Integer key) {
         if (receiptMap.containsKey(key)) {
-          return   receiptMap.remove(key);
+            return receiptMap.remove(key);
         }
         return null;
     }
@@ -76,9 +85,19 @@ public class DatabaseService implements IDataBaseService {
         if (receiptMap.containsKey(key)) {
             List<Product> orderList = receiptMap.get(key).getOrders();
             orderList.remove(orderList.size() - 1);
-            if(orderList.isEmpty()){
+            if (orderList.isEmpty()) {
                 deleteReceipt(key);
             }
         }
+    }
+
+    public void deleteOldReceipts() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(System.currentTimeMillis() -timer));
+        List<Integer> userIdList = receiptMap.keySet().stream()
+                .filter(id -> receiptMap.get(id).getCalendar().before(calendar))
+                .collect(Collectors.toList());
+
+        userIdList.stream().forEach(id -> receiptMap.remove(id));
     }
 }
