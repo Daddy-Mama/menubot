@@ -25,6 +25,7 @@ import static com.iwahare.enums.ReservedWordsEnum.*;
  */
 @Service
 public class MenuService implements IMenuService {
+
     @Autowired
     private Menu menu;
     @Autowired

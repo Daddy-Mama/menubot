@@ -21,7 +21,7 @@ public class MessageTransportDto {
     private boolean sucPayment;
     private List<Long> chat_id;
     private PayedOrderInfo payedOrderInfo;
-private List<DeleteMessage> deleteMessage;
+    private List<DeleteMessage> deleteMessage;
 
     public MessageTransportDto() {
         this.desripion = "";

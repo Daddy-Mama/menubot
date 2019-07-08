@@ -2,8 +2,8 @@
   "description": "\ud83d\udc47Меню\ud83d\udc47",
   "categories": [
     {
-      "name": "Шаурма",
-      "preNameEmoji": "\uD83C\uDF2F",
+      "name": "Лате",
+      "preNameEmoji": "\u2615",
       "postNameEmoji": "",
       "description": "\ud83d\udd25\ud83c\udfaf Выберите размер \ud83c\udfaf\ud83d\udd25",
       "products": [
@@ -14,131 +14,151 @@
           "price": "35",
           "extras": [
             {
-              "name": " Сыр",
-              "preNameEmoji": "\uD83E\uDDC0",
+              "name": " Вишневый",
+              "preNameEmoji": "\ud83c\udf52",
               "price": "10"
             },
             {
-              "name": " Картошка",
-              "preNameEmoji": "\uD83C\uDF5F",
+              "name": " Банановый",
+              "preNameEmoji": "\ud83c\udf4c",
               "price": "10"
             },
             {
-              "name": " Соус",
-              "preNameEmoji": "\uD83E\uDD6B",
+              "name": " Клубничный",
+              "preNameEmoji": "\ud83c\udf53",
               "price": "50"
             }
           ],
-          "extraDescription": "\ud83e\uddc2\uD83C\uDF74 Добавить ингридиенты:"
+          "extraDescription": "\ud83e\uddc2\uD83C\uDF74 Добавить сироп:"
         },
         {
-          "name": "Стандарт",
+          "name": "Средний",
           "preNameEmoji": "",
           "postNameEmoji": "\uD83D\uDCB0",
           "price": "50",
           "extras": [
             {
-              "name": " Сыр",
-              "preNameEmoji": "\uD83E\uDDC0",
+              "name": " Вишневый",
+              "preNameEmoji": "\ud83c\udf52",
               "price": "10"
             },
             {
-              "name": " Картошка",
-              "preNameEmoji": "\uD83C\uDF5F",
+              "name": " Банановый",
+              "preNameEmoji": "\ud83c\udf4c",
               "price": "10"
             },
             {
-              "name": " Соус",
-              "preNameEmoji": "\uD83E\uDD6B",
+              "name": " Клубничный",
+              "preNameEmoji": "\ud83c\udf53",
               "price": "50"
             }
           ],
-          "extraDescription": "\ud83e\uddc2\uD83C\uDF74 Добавить ингридиенты:"
+          "extraDescription": "\ud83e\uddc2\uD83C\uDF74 Добавить сироп:"
         },
         {
-          "name": "Двойная",
+          "name": "Большой",
           "preNameEmoji": "",
           "postNameEmoji": "\uD83D\uDCB0",
           "price": "100",
           "extras": [
             {
-              "name": " Сыр",
-              "preNameEmoji": "\uD83E\uDDC0",
+              "name": " Вишневый",
+              "preNameEmoji": "\ud83c\udf52",
               "price": "10"
             },
             {
-              "name": " Картошка",
-              "preNameEmoji": "\uD83C\uDF5F",
+              "name": " Банановый",
+              "preNameEmoji": "\ud83c\udf4c",
               "price": "10"
             },
             {
-              "name": " Соус",
-              "preNameEmoji": "\uD83E\uDD6B",
+              "name": " Клубничный",
+              "preNameEmoji": "\ud83c\udf53",
               "price": "50"
             }
           ],
-
-          "extraDescription": "\ud83e\uddc2\uD83C\uDF74 Добавить ингридиенты: "
+          "extraDescription": "\ud83e\uddc2\uD83C\uDF74 Добавить сироп:"
         }
       ],
       "categories": []
     },
     {
-      "name": "Люля-кебаб ",
-      "preNameEmoji": "\uD83C\uDF62",
+      "name": "Капучино",
+      "preNameEmoji": "\u2615",
       "postNameEmoji": "",
-
       "description": "\uD83D\uDD25\uD83C\uDFAF Выберите размер\uD83C\uDFAF\uD83D\uDD25",
       "products": [
         {
           "name": "Мини",
           "preNameEmoji": "",
           "postNameEmoji": "\uD83D\uDCB0",
-          "price": "35"
+          "price": "35",
+          "extras": [
+            {
+              "name": " Вишневый",
+              "preNameEmoji": "\ud83c\udf52",
+              "price": "10"
+            },
+            {
+              "name": " Банановый",
+              "preNameEmoji": "\ud83c\udf4c",
+              "price": "10"
+            },
+            {
+              "name": " Клубничный",
+              "preNameEmoji": "\ud83c\udf53",
+              "price": "50"
+            }
+          ],
+          "extraDescription": "\ud83e\uddc2\uD83C\uDF74 Добавить сироп:"
         },
         {
-          "name": "Стандарт",
+          "name": "Средний",
           "preNameEmoji": "",
           "postNameEmoji": "\uD83D\uDCB0",
-
-          "price": "50"
+          "price": "50",
+          "extras": [
+            {
+              "name": " Вишневый",
+              "preNameEmoji": "\ud83c\udf52",
+              "price": "10"
+            },
+            {
+              "name": " Банановый",
+              "preNameEmoji": "\ud83c\udf4c",
+              "price": "10"
+            },
+            {
+              "name": " Клубничный",
+              "preNameEmoji": "\ud83c\udf53",
+              "price": "50"
+            }
+          ],
+          "extraDescription": "\ud83e\uddc2\uD83C\uDF74 Добавить сироп:"
         },
         {
-          "name": "Двойная",
+          "name": "Большой",
           "preNameEmoji": "",
           "postNameEmoji": "\uD83D\uDCB0",
-
-          "price": "100"
-        }
-      ],
-      "categories": []
-    },
-    {
-      "name": "Люля-кебаб 123132132132",
-      "preNameEmoji": "\uD83C\uDF62",
-      "postNameEmoji": "",
-
-      "description": "\uD83D\uDD25\uD83C\uDFAF Выберите размер\uD83C\uDFAF\uD83D\uDD25",
-      "products": [
-        {
-          "name": "Мини",
-          "preNameEmoji": "",
-          "postNameEmoji": "\uD83D\uDCB0",
-          "price": "35"
-        },
-        {
-          "name": "Стандарт",
-          "preNameEmoji": "",
-          "postNameEmoji": "\uD83D\uDCB0",
-
-          "price": "50"
-        },
-        {
-          "name": "Двойная",
-          "preNameEmoji": "",
-          "postNameEmoji": "\uD83D\uDCB0",
-
-          "price": "100"
+          "price": "100",
+          "extras": [
+            {
+              "name": " Вишневый",
+              "preNameEmoji": "\ud83c\udf52",
+              "price": "10"
+            },
+            {
+              "name": " Банановый",
+              "preNameEmoji": "\ud83c\udf4c",
+              "price": "10"
+            },
+            {
+              "name": " Клубничный",
+              "preNameEmoji": "\ud83c\udf53",
+              "price": "50"
+            }
+          ],
+          "extraDescription": "\ud83e\uddc2\uD83C\uDF74 Добавить сироп:"
         }
       ],
       "categories": []
