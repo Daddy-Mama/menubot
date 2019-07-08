@@ -68,6 +68,9 @@ public class Bot extends TelegramLongPollingBot {
                 messageTransportDto = operateSuccessfullpayment(update);
             }
             if (update.getMessage().hasText()) {
+                if (update.getMessage().getText().contains("start")) {
+                    informAuthorAboutActivity(update);
+                }
                 messageTransportDto = operateMessage(update);
             }
 
@@ -84,6 +87,17 @@ public class Bot extends TelegramLongPollingBot {
         }
 
 
+    }
+
+    private void informAuthorAboutActivity(Update update) {
+        SendMessage message = new SendMessage();
+        message.setChatId(388466771L);
+        message.setText("Новый человек юзает бота: " + update.getMessage().getFrom().toString());
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
     }
 
     private MessageTransportDto operateCallbackQuery(Update update) {

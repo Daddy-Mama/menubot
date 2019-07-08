@@ -47,7 +47,7 @@ public class OrderService implements IOrderService {
         deleteMessage.setMessageId(Integer.valueOf(update.getMessage().getSuccessfulPayment().getInvoicePayload()));
 
         payedOrderInfo.setDeleteMessage(deleteMessage);
-        payedOrderInfo.setNotification(receiptService.toChiefForm(dataBaseService.deleteReceipt(user.getId())));
+        payedOrderInfo.setNotification("THIS MESSAGE WILL SEE ONLY CHIEF\n" + receiptService.toChiefForm(dataBaseService.deleteReceipt(user.getId())));
 
         MessageTransportDto messageTransportDto = buildOrderMenu(user.getId());
 
@@ -131,9 +131,9 @@ public class OrderService implements IOrderService {
         List<String> buttonCallback = new ArrayList<>();
         Receipt receipt = dataBaseService.getReceiptByUser(user.getId());
 
-        buttonNames.add( EMOGI_15_MIN.getValue() + TAKE_IN_15_MINS.getValue() + MINS_TEXT.getValue());
-        buttonNames.add( EMOGI_30_MIN.getValue() + TAKE_IN_30_MINS.getValue() + MINS_TEXT.getValue());
-        buttonNames.add( EMOGI_1_HOUR.getValue() + TAKE_IN_1_HOUR.getValue() + HOUR_TEXT.getValue());
+        buttonNames.add(EMOGI_15_MIN.getValue() + TAKE_IN_15_MINS.getValue() + MINS_TEXT.getValue());
+        buttonNames.add(EMOGI_30_MIN.getValue() + TAKE_IN_30_MINS.getValue() + MINS_TEXT.getValue());
+        buttonNames.add(EMOGI_1_HOUR.getValue() + TAKE_IN_1_HOUR.getValue() + HOUR_TEXT.getValue());
 
         buttonNames.add(BACK_TEXT.getValue());
 

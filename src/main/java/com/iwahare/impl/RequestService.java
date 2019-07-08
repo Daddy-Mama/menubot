@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import java.util.stream.Collectors;
@@ -35,7 +36,8 @@ public class RequestService implements IRequestService {
     @Override
     public MessageTransportDto operatePayment(Update update) {
         MessageTransportDto messageTransportDto = orderService.operatePayment(update);
-        messageTransportDto.setChat_id(adminChatIds);
+//        messageTransportDto.setChat_id(adminChatIds);
+        messageTransportDto.setChat_id(Collections.singletonList(update.getMessage().getChatId()));
         return messageTransportDto;
     }
 
